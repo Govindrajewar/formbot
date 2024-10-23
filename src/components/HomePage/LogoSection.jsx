@@ -1,4 +1,4 @@
-import "../../style/LogoSection.css";
+import "../../style/HomePage/LogoSection.css";
 import gmailLogo from "../../assets/HomePage/Logo/Upper/upperlogo1.png";
 import mailChimpLogo from "../../assets/HomePage/Logo/Upper/upperlogo2.png";
 import notionLogo from "../../assets/HomePage/Logo/Upper/upperlogo3.png";

@@ -1,4 +1,4 @@
-import "../../style/Section5.css";
+import "../../style/HomePage/Section5.css";
 import backgroundImg from "../../assets/HomePage/Section5/background.png";
 
 function Section5() {

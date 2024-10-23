@@ -70,13 +70,14 @@
 .shadow-background {
   width: 70%;
   position: absolute;
-  top: 761%;
+  top: 780%;
+  margin-left: 15%;
+  column-gap: 375px;
+  row-gap: 175px;
+
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  column-gap: 375px;
-  row-gap: 175px;
-  padding: 20px;
-  margin-left: 200px;
+  background: transparent;
 }

@@ -7,58 +7,22 @@ import Settings from "./pages/Settings";
 import Workspace from "./pages/Workspace";
 import PostLogin from "./pages/PostLogin";
 import Desktop from "./pages/Desktop";
-import ProtectedRoute from "./components/ProtectedRoute";
-import { useState } from "react";
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
   return (
     <div className="App">
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route
-            path="/login"
-            element={<LoginPage setIsAuthenticated={setIsAuthenticated} />}
-          />
+          <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
-          <Route
-            path="/postlogin"
-            element={
-              <ProtectedRoute isAuthenticated={isAuthenticated}>
-                <PostLogin />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/settings"
-            element={
-              <ProtectedRoute isAuthenticated={isAuthenticated}>
-                <Settings />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/workspace"
-            element={
-              <ProtectedRoute isAuthenticated={isAuthenticated}>
-                <Workspace />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/desktop"
-            element={
-              <ProtectedRoute isAuthenticated={isAuthenticated}>
-                <Desktop />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/postlogin" element={<PostLogin />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/workspace" element={<Workspace />} />
+          <Route path="/desktop" element={<Desktop />} />
         </Routes>
       </BrowserRouter>
     </div>
   );
 }
-
 export default App;

@@ -7,7 +7,7 @@ import bottomEllipse from "../assets/Login/bottomEllipse.png";
 import sideEllipse from "../assets/Login/sideEllipse.png";
 import polygon from "../assets/Login/polygon.png";
 
-function LoginPage({ setIsAuthenticated }) {
+function LoginPage() {
   const navigate = useNavigate();
   const handleArrowBack = () => {
     navigate("/");
@@ -42,15 +42,16 @@ function LoginPage({ setIsAuthenticated }) {
 
     if (!isValid) return;
 
-    console.log("Login with:", { email, password });
-
     try {
       const response = await Login(email, password);
       if (response.status === 201) {
         const userName = response.data.user.userName;
         alert("Login successful");
-        setIsAuthenticated(true);
-        navigate("/postlogin", { state: { userName } });
+        localStorage.setItem("formBotCurrentUser", userName);
+        localStorage.setItem("isLoggedInFormBot", true);
+        navigate("/postlogin");
+      } else {
+        alert(response.data.message);
       }
     } catch (error) {
       setLoginError(error.message);

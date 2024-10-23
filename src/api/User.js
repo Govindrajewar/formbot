@@ -1,11 +1,9 @@
 import axios from "axios";
-
-// TODO: Add Server Deployment Link
-const BACKEND_ORIGIN_URL = "https://formbot-server-production.up.railway.app";
+import { BACKEND_URL } from "../deploymentLink";
 
 const Login = async (email, password) => {
   try {
-    const response = await axios.post(`${BACKEND_ORIGIN_URL}/login`, {
+    const response = await axios.post(`${BACKEND_URL}/login`, {
       email,
       password,
     });
@@ -17,7 +15,7 @@ const Login = async (email, password) => {
 
 const Register = async (userName, email, password) => {
   try {
-    const response = await axios.post(`${BACKEND_ORIGIN_URL}/signup`, {
+    const response = await axios.post(`${BACKEND_URL}/signup`, {
       userName,
       email,
       password,

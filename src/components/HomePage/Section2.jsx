@@ -1,4 +1,4 @@
-import "../../style/Section2.css";
+import "../../style/HomePage/Section2.css";
 import leftBG from "../../assets/left-bg.png";
 import rightBG from "../../assets/right-bg.png";
 import flowChart from "../../assets/flowchart.png";

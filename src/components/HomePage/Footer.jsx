@@ -1,4 +1,4 @@
-import "../../style/Footer.css";
+import "../../style/HomePage/Footer.css";
 import linkImg from "../../assets/HomePage/Footer/link.png";
 
 function Footer() {
@@ -6,48 +6,80 @@ function Footer() {
     <div className="footer">
       <div className="footer-container-developer">
         Made with ❤️ by <br />
-        <a href="https://cuvette.tech/app/student/">@cuvette</a>
+        <a
+          href="https://govindrajewar.github.io/Portfolio/"
+          className="developer-name"
+          target="_blank"
+          rel="noreferrer"
+        >
+          @ Govind Rajewar
+        </a>
       </div>
       <div className="footer-container">
-        <a href="https://www.npmjs.com/package/http-status-codes">
+        <a href="#Status" id="Status">
           Status &nbsp;
           <img src={linkImg} alt="link" />
         </a>
 
-        <a href="https://legacy.reactjs.org/docs/getting-started.html">
+        <a href="#Documentation" id="Documentation">
           Documentation &nbsp;
           <img src={linkImg} alt="link" />
         </a>
-        <a href="https://roadmap.sh/react">
+
+        <a href="#Roadmap" id="Roadmap">
           Roadmap &nbsp;
           <img src={linkImg} alt="link" />
         </a>
-        <a href="https://cuvette.tech/placement-guarantee-program/">Pricing</a>
+
+        <a href="#Pricing" id="Pricing">
+          Pricing
+        </a>
       </div>
       <div className="footer-container">
-        <a href="https://discord.com/">
+        <a href="#Discord" id="Discord">
           Discord &nbsp;
           <img src={linkImg} alt="link" />
         </a>
-        <a href="https://github.com/Govindrajewar">
-          GitHub repository &nbsp;
+        <a
+          href="https://github.com/Govindrajewar"
+          target="_blank"
+          rel="noreferrer"
+        >
+          GitHub &nbsp;
           <img src={linkImg} alt="link" />
         </a>
-        <a href="https://x.com/who_abhirajewar">
+        <a
+          href="https://x.com/who_abhirajewar"
+          target="_blank"
+          rel="noreferrer"
+        >
           Twitter &nbsp;
           <img src={linkImg} alt="link" />
         </a>
-        <a href="https://www.linkedin.com/in/govind-rajewar/">
+        <a
+          href="https://www.linkedin.com/in/govind-rajewar/"
+          target="_blank"
+          rel="noreferrer"
+        >
           LinkedIn &nbsp;
           <img src={linkImg} alt="link" />
         </a>
-        <a href="https://openbb.co/oss-friends">OSS Friends</a>
       </div>
       <div className="footer-container">
-        <a href="https://legacy.reactjs.org/docs/faq-ajax.html">About</a>
-        <a href="https://github.com/Govindrajewar">Contact</a>
-        <a href="https://opensource.fb.com/legal/terms/">Terms of Service</a>
-        <a href="https://opensource.fb.com/legal/privacy/">Privacy Policy</a>
+        <a href="#About" id="About">
+          About
+        </a>
+        <a href="#Contact" id="Contact">
+          Contact
+        </a>
+
+        <a href="#TermsOfService" id="TermsOfService">
+          Terms of Service
+        </a>
+
+        <a href="#PrivacyPolicy" id="PrivacyPolicy">
+          Privacy Policy
+        </a>
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import "../../style/Section3.css";
+import "../../style/HomePage/Section3.css";
 import doneImg from "../../assets/HomePage/Section3/done.png";
 import closeImg from "../../assets/HomePage/Section3/close.png";
 import typeBotImg from "../../assets/HomePage/Section3/typebotStandard.png";
@@ -54,16 +54,21 @@ function Section3() {
             What services are you interested in? <span>*</span>
           </label>
           <br />
-          <input type="checkbox" value="Website Dev" />
+          <input type="checkbox" value="Website Dev" disabled />
           Website Dev
           <br />
-          <input type="checkbox" value="Content Marketing" />
+          <input type="checkbox" value="Content Marketing" disabled />
           Content Marketing
           <br />
-          <input type="checkbox" value="Social Media" />
+          <input type="checkbox" value="Social Media" disabled />
           Social Media
           <br />
-          <input type="checkbox" id="checkboxId" value="UX/UI Design" />
+          <input
+            type="checkbox"
+            id="checkboxId"
+            value="UX/UI Design"
+            disabled
+          />
           UX/UI Design
           <br />
           <label htmlFor="addInfo">

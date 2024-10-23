@@ -1,4 +1,4 @@
-import "../../style/Section7.css";
+import "../../style/HomePage/Section7.css";
 import triangle from "../../assets/triangle.png";
 import halfCircle from "../../assets/halfcircle.png";
 

@@ -1,4 +1,4 @@
-import "../../style/Section6.css";
+import "../../style/HomePage/Section6.css";
 // Background Icons
 import background1Icon from "../../assets/HomePage/Section6/shadow/shadow1.png";
 import background2Icon from "../../assets/HomePage/Section6/shadow/shadow2.png";

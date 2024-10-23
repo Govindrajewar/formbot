@@ -5,12 +5,18 @@ import addFolder from "../assets/PostLogin/addFolder.png";
 import drop from "../assets/PostLogin/drop.png";
 import deleteIcon from "../assets/PostLogin/delete.png";
 import upArrow from "../assets/PostLogin/upArrow.png";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { BACKEND_URL } from "../deploymentLink";
 
 function PostLogin() {
-  const location = useLocation();
   // eslint-disable-next-line
-  const [userName, setUsername] = useState(location.state?.userName || "");
+  const [userName, setUsername] = useState(
+    localStorage.getItem("formBotCurrentUser")
+  );
+  // eslint-disable-next-line
+  const [isLoggedInFormBot, setIsLoggedInFormBot] = useState(
+    localStorage.getItem("isLoggedInFormBot") === "true"
+  );
   const [isListVisible, setIsListVisible] = useState(false);
   const [isCreateFolder, setIsCreateFolder] = useState(false);
   const [newFolderName, setNewFolderName] = useState("");
@@ -22,8 +28,14 @@ function PostLogin() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (!isLoggedInFormBot) {
+      navigate("/login");
+    }
+  }, [isLoggedInFormBot, navigate]);
+
+  useEffect(() => {
     axios
-      .get("https://formbot-server-production.up.railway.app/formdata")
+      .get(`${BACKEND_URL}/formdata`)
       .then((response) => {
         const userForms = response.data
           .filter((item) => item.user === userName)
@@ -46,6 +58,8 @@ function PostLogin() {
 
   const handleLogout = () => {
     navigate("/");
+    localStorage.removeItem("formBotCurrentUser");
+    localStorage.removeItem("isLoggedInFormBot");
   };
 
   const handleCreateFolder = () => {
@@ -92,7 +106,7 @@ function PostLogin() {
 
   const handleDeleteForm = (formName) => {
     axios
-      .delete(`https://formbot-server-production.up.railway.app/formdata/${formName}`)
+      .delete(`${BACKEND_URL}/formdata/${formName}`)
       .then(() => {
         setFormNames(formNames.filter((name) => name !== formName));
       })

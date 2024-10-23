@@ -3,7 +3,7 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 20px 10px;
+  padding: 100px 10px 20px;
 }
 
 .section1-header {
@@ -19,17 +19,22 @@
   font-size: 20px;
   margin-top: 10px;
   width: 800px;
+  color: #ffffffeb;
 }
 
 .create-formBit-btn {
   font-size: 18px;
-  margin-top: 20px;
-  padding: 10px 20px;
+  margin-top: 30px;
+  padding: 20px 50px;
   background-color: #0042da;
   color: white;
   border: 2px solid #0042da;
   border-radius: 6px;
-  width: 300px;
+}
+
+.create-formBit-btn:hover {
+  background-color: #0031b8;
+  color: white;
 }
 
 .triangle-img {

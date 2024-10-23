@@ -3,7 +3,6 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-
   padding: 20px 100px;
 }
 
@@ -75,19 +74,31 @@ button {
 
 .signIn-btn {
   font-size: 20px;
-  padding: 10px;
+  padding: 10px 20px;
   border: 2px solid #7ea6ff;
   border-radius: 5px;
   color: #7ea6ff;
   background-color: #000000;
 }
 
-.create-btn {
-  font-size: 20px;
-  padding: 10px;
-  border: 2px solid #1a5fff;
-  border-radius: 5px;
+.signIn-btn:hover {
   color: #ffffff;
   background-color: #1a5fff;
-  margin-left: 10px;
+  border: 2px solid transparent;
+}
+
+.create-btn {
+  font-size: 20px;
+  padding: 10px 20px;
+  border: 2px solid #7ea6ff;
+  border-radius: 5px;
+  color: #7ea6ff;
+  background-color: #000000;
+  margin-left: 20px;
+}
+
+.create-btn:hover {
+  color: #ffffff;
+  background-color: #1a5fff;
+  border: 2px solid transparent;
 }

@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 50px 100px;
+  padding: 50px 0;
 }
 
 .section4 img {
@@ -17,10 +17,6 @@
   display: flex;
   justify-content: space-around;
   align-items: center;
-}
-
-.section4-upper img {
-  border: 3px solid #f2a055;
 }
 
 .section4-upper-sidebar,

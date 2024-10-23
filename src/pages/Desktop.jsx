@@ -3,11 +3,18 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import icon from "../../src/assets/Workspace/Theme/icon.png";
 import send from "../assets/Desktop/send.png";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { BACKEND_URL } from "../deploymentLink";
 
 function Desktop() {
   const location = useLocation();
+  const navigate = useNavigate();
   const formName = location.state?.formName;
+
+  // eslint-disable-next-line
+  const [isLoggedInFormBot, setIsLoggedInFormBot] = useState(
+    localStorage.getItem("isLoggedInFormBot") === "true"
+  );
 
   const [data, setData] = useState([]);
   const [inputValues, setInputValues] = useState({});
@@ -15,8 +22,14 @@ function Desktop() {
   const [isDisabled, setIsDisabled] = useState({});
 
   useEffect(() => {
+    if (!isLoggedInFormBot) {
+      navigate("/login");
+    }
+  }, [isLoggedInFormBot, navigate]);
+
+  useEffect(() => {
     axios
-      .get("https://formbot-server-production.up.railway.app/formdata")
+      .get(`${BACKEND_URL}/formdata`)
       .then((response) => {
         const initialValues = response.data.reduce((acc, form) => {
           form.itemList.forEach((item, index) => {

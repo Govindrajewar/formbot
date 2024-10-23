@@ -1,20 +1,18 @@
 .footer {
   display: flex;
   justify-content: space-evenly;
-  padding: 10px 0 100px;
+  padding: 100px 0;
+  font-size: 20px;
 }
 
 .footer a {
   color: #ffffffeb;
-  font-size: 16px;
-  line-height: 24px;
-  font-weight: 400;
   text-decoration: none;
-  margin-top: 10px;
+  margin: 5px;
 }
 
 .footer a:hover {
-  text-decoration: underline;
+  color: greenyellow;
 }
 
 .footer-container {
@@ -29,4 +27,8 @@
 .footer img {
   height: 16px;
   width: 16px;
+}
+
+.footer .developer-name {
+  margin-top: 20px;
 }

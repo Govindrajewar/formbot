@@ -1,4 +1,4 @@
-import "../../style/NavBar.css";
+import "../../style/HomePage/NavBar.css";
 import { useNavigate } from "react-router-dom";
 
 function NavBar({ createFormBot }) {
