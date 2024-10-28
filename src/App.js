@@ -20,6 +20,7 @@ function App() {
           <Route path="/settings" element={<Settings />} />
           <Route path="/workspace" element={<Workspace />} />
           <Route path="/desktop" element={<Desktop />} />
+          <Route path="/viewForm/:formId" element={<Desktop />} />
         </Routes>
       </BrowserRouter>
     </div>

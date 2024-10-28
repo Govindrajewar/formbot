@@ -34,6 +34,7 @@ function Workspace() {
     ratingInput: 0,
     buttonInput: 0,
   });
+  const [currentFormId, setCurrentFormId] = useState("");
 
   useEffect(() => {
     if (!isLoggedInFormBot) {
@@ -64,6 +65,7 @@ function Workspace() {
       .post(`${BACKEND_URL}/dynamic-items`, dataToSave)
       .then((response) => {
         console.log("Items saved:", response.data);
+        setCurrentFormId(response.data._id);
       })
       .catch((error) => {
         console.error("There was an error saving the items!", error);
@@ -79,6 +81,7 @@ function Workspace() {
         formName={formName}
         setFormName={setFormName}
         handleSave={handleSave}
+        currentFormId={currentFormId}
       />
       {activeComponent === "Flow" && (
         <Flow

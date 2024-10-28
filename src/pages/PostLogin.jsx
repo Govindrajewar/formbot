@@ -23,7 +23,7 @@ function PostLogin() {
   const [folders, setFolders] = useState([]);
   const [isDeleteFolder, setIsDeleteFolder] = useState(false);
   const [deleteIndexFolder, setDeleteIndexFolder] = useState(0);
-  const [formNames, setFormNames] = useState([]);
+  const [forms, setForms] = useState([]);
 
   const navigate = useNavigate();
 
@@ -39,17 +39,19 @@ function PostLogin() {
       .then((response) => {
         const userForms = response.data
           .filter((item) => item.user === userName)
-          .map((item) => item.formName);
-        setFormNames(userForms);
+          .map((item) => ({
+            formName: item.formName,
+            formId: item._id,
+          }));
+        setForms(userForms);
       })
       .catch((error) => {
         console.error("There was an error fetching the data!", error);
       });
-    // eslint-disable-next-line
-  }, []);
+  }, [userName]);
 
-  const goToForm = (formName) => {
-    navigate("/desktop", { state: { formName } });
+  const goToForm = (formId) => {
+    navigate(`/viewForm/${formId}`);
   };
 
   const handleSettings = () => {
@@ -104,17 +106,18 @@ function PostLogin() {
     navigate("/Workspace", { state: { userName } });
   };
 
-  const handleDeleteForm = (formName) => {
+  // TODO: Modify the delete functionality in backend
+  const handleDeleteForm = (formId) => {
     axios
-      .delete(`${BACKEND_URL}/formdata/${formName}`)
+      .delete(`${BACKEND_URL}/formdata/${formId}`)
       .then(() => {
-        setFormNames(formNames.filter((name) => name !== formName));
+        setForms(forms.filter((form) => form.formId !== formId));
       })
       .catch((error) => {
         console.error("There was an error deleting the form!", error);
       });
 
-    alert("Form deleted successful");
+    alert("Form deleted successfully");
   };
 
   return (
@@ -179,20 +182,27 @@ function PostLogin() {
             <br />
             <br />
             <br />
-            Create a typebot
+            Create a TypeBot
           </div>
           <div className="form-names">
             <div className="form-list">
-              {formNames.map((formName, index) => (
-                <div className="form-list-item" key={index}>
-                  <span onClick={() => goToForm(formName)}>{formName}</span>
-                  <span
-                    className="delete-form-icon"
-                    onClick={() => handleDeleteForm(formName)}
+              {forms.map(({ formName, formId }, index) => (
+                <>
+                  <div
+                    className="form-list-item"
+                    key={index}
+                    onClick={() => goToForm(formId)}
                   >
-                    <img src={deleteIcon} alt="delete Icon" />
-                  </span>
-                </div>
+                    <span>{formName}</span>
+                  </div>
+
+                  <img
+                    src={deleteIcon}
+                    alt="delete Icon"
+                    className="delete-form-icon"
+                    onClick={() => handleDeleteForm(formId)}
+                  />
+                </>
               ))}
             </div>
           </div>

@@ -8,6 +8,7 @@ function WorkspaceNavBar({
   formName,
   setFormName,
   handleSave,
+  currentFormId,
 }) {
   const navigate = useNavigate();
   const [selectedItem, setSelectedItem] = useState("Flow");
@@ -22,7 +23,7 @@ function WorkspaceNavBar({
       alert("Enter Form Name");
       return;
     }
-    navigate("/desktop", { state: { formName } });
+    navigate(`/viewForm/${currentFormId}`);
   };
 
   const handleClose = () => {

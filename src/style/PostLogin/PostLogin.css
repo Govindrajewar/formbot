@@ -267,8 +267,11 @@
 
 .delete-form-icon {
   position: relative;
-  top: -120px;
-  right: -50px;
+
+  height: 40px;
+  margin-left: -30px;
+  margin-top: -10px;
+  cursor: pointer;
 }
 
 .delete-form-icon img {

@@ -1,6 +1,5 @@
 .desktop {
   height: 100vh;
-  width: 100vw;
   background-color: #ffffff;
   color: #000000;
 }
@@ -11,6 +10,12 @@
   gap: 10px;
   padding: 20px;
   margin: 0 5%;
+}
+
+.chat-container .form-title {
+  border-bottom: 2px solid black;
+  text-align: center;
+  padding-bottom: 20px;
 }
 
 .chat-bubble {
@@ -199,4 +204,13 @@
   width: 225px;
   height: 40px;
   outline: none;
+}
+
+.loading-message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  font-size: 30px;
 }
