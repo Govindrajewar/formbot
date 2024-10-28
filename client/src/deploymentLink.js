@@ -1,2 +1,2 @@
-export const BACKEND_URL = "https://formbot-server-production.up.railway.app";
-export const FRONTEND_URL = "https://form-bot-client.vercel.app/";
+export const BACKEND_URL = "https://formbot-server-fxza.onrender.com";
+export const FRONTEND_URL = "https://formbot-omega.vercel.app/";
