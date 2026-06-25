@@ -48,7 +48,7 @@ function LoginPage() {
         const userName = response.data.user.userName;
         alert("Login successful");
         localStorage.setItem("formBotCurrentUser", userName);
-        localStorage.setItem("isLoggedInFormBot", true);
+        localStorage.setItem("formBotToken", response.data.token);
         navigate("/postlogin");
       } else {
         alert(response.data.message);

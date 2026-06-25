@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import "../style/Settings/Settings.css";
 import lock from "../assets/Settings/lock.png";
 import logout from "../assets/Settings/logout.png";
@@ -9,12 +9,9 @@ import { useNavigate } from "react-router-dom";
 function Settings() {
   const navigate = useNavigate();
 
-  // eslint-disable-next-line
-  const [isLoggedInFormBot, setIsLoggedInFormBot] = useState(
-    localStorage.getItem("isLoggedInFormBot") === "true"
-  );
-
   const handleLogout = () => {
+    localStorage.removeItem("formBotCurrentUser");
+    localStorage.removeItem("formBotToken");
     navigate("/");
   };
 
@@ -31,12 +28,6 @@ function Settings() {
     oldPassword: "",
     newPassword: "",
   });
-
-  useEffect(() => {
-    if (!isLoggedInFormBot) {
-      navigate("/login");
-    }
-  }, [isLoggedInFormBot, navigate]);
 
   const isValidEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

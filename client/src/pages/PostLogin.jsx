@@ -1,21 +1,16 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import axiosInstance from "../api/axiosInstance";
 import "../style/PostLogin/PostLogin.css";
 import addFolder from "../assets/PostLogin/addFolder.png";
 import drop from "../assets/PostLogin/drop.png";
 import deleteIcon from "../assets/PostLogin/delete.png";
 import upArrow from "../assets/PostLogin/upArrow.png";
 import { useNavigate } from "react-router-dom";
-import { BACKEND_URL } from "../deploymentLink";
 
 function PostLogin() {
   // eslint-disable-next-line
   const [userName, setUsername] = useState(
     localStorage.getItem("formBotCurrentUser")
-  );
-  // eslint-disable-next-line
-  const [isLoggedInFormBot, setIsLoggedInFormBot] = useState(
-    localStorage.getItem("isLoggedInFormBot") === "true"
   );
   const [isListVisible, setIsListVisible] = useState(false);
   const [isCreateFolder, setIsCreateFolder] = useState(false);
@@ -28,27 +23,19 @@ function PostLogin() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!isLoggedInFormBot) {
-      navigate("/login");
-    }
-  }, [isLoggedInFormBot, navigate]);
-
-  useEffect(() => {
-    axios
-      .get(`${BACKEND_URL}/formdata`)
+    axiosInstance
+      .get(`/formdata`)
       .then((response) => {
-        const userForms = response.data
-          .filter((item) => item.user === userName)
-          .map((item) => ({
-            formName: item.formName,
-            formId: item._id,
-          }));
+        const userForms = response.data.map((item) => ({
+          formName: item.formName,
+          formId: item._id,
+        }));
         setForms(userForms);
       })
       .catch((error) => {
         console.error("There was an error fetching the data!", error);
       });
-  }, [userName]);
+  }, []);
 
   const goToForm = (formId) => {
     navigate(`/viewForm/${formId}`);
@@ -61,7 +48,7 @@ function PostLogin() {
   const handleLogout = () => {
     navigate("/");
     localStorage.removeItem("formBotCurrentUser");
-    localStorage.removeItem("isLoggedInFormBot");
+    localStorage.removeItem("formBotToken");
   };
 
   const handleCreateFolder = () => {
@@ -108,8 +95,8 @@ function PostLogin() {
 
   // TODO: Modify the delete functionality in backend
   const handleDeleteForm = (formId) => {
-    axios
-      .delete(`${BACKEND_URL}/formdata/${formId}`)
+    axiosInstance
+      .delete(`/formdata/${formId}`)
       .then(() => {
         setForms(forms.filter((form) => form.formId !== formId));
       })

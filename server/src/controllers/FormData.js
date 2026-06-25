@@ -2,11 +2,15 @@ const FormData = require("../models/FormData.js");
 
 const setFormData = async (req, res) => {
   try {
-    if (!req.body.formName || !req.body.user || !req.body.itemList) {
+    if (!req.body.formName || !req.body.itemList) {
       return res.status(400).send("Invalid data format");
     }
 
-    const formData = new FormData(req.body);
+    const formData = new FormData({
+      formName: req.body.formName,
+      itemList: req.body.itemList,
+      user: req.user.userName,
+    });
     await formData.save();
     res.status(201).send(formData);
   } catch (error) {
@@ -17,7 +21,7 @@ const setFormData = async (req, res) => {
 
 const getFormData = async (req, res) => {
   try {
-    const data = await FormData.find();
+    const data = await FormData.find({ user: req.user.userName });
     res.status(200).json(data);
   } catch (error) {
     res.status(500).json({ message: "Error retrieving data", error });
@@ -27,10 +31,17 @@ const getFormData = async (req, res) => {
 const deleteFormData = async (req, res) => {
   try {
     const currentFormId = req.params.currentFormId;
-    const result = await FormData.deleteOne({ _id: currentFormId });
-    if (result.deletedCount === 0) {
+    const form = await FormData.findOne({ _id: currentFormId });
+
+    if (!form) {
       return res.status(404).send("Form not found");
     }
+
+    if (form.user !== req.user.userName) {
+      return res.status(403).send("You are not allowed to delete this form");
+    }
+
+    await FormData.deleteOne({ _id: currentFormId });
     res.status(200).send("Form deleted successfully");
   } catch (error) {
     res.status(500).send(error.message);

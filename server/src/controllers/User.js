@@ -49,9 +49,11 @@ const loginUser = async (req, res) => {
 
     delete user.password;
 
-    const jwToken = jwt.sign(user, process.env.jwtPrivateKey, {
-      expiresIn: 6000,
-    });
+    const jwToken = jwt.sign(
+      { id: user._id, email: user.email, userName: user.userName },
+      process.env.jwtPrivateKey,
+      { expiresIn: 6000 }
+    );
 
     res.status(201).json({
       status: "SUCCESS",

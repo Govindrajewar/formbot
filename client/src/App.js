@@ -7,6 +7,7 @@ import Settings from "./pages/Settings";
 import Workspace from "./pages/Workspace";
 import PostLogin from "./pages/PostLogin";
 import Desktop from "./pages/Desktop";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
@@ -16,9 +17,30 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
-          <Route path="/postlogin" element={<PostLogin />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/workspace" element={<Workspace />} />
+          <Route
+            path="/postlogin"
+            element={
+              <ProtectedRoute>
+                <PostLogin />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <ProtectedRoute>
+                <Settings />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/workspace"
+            element={
+              <ProtectedRoute>
+                <Workspace />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/desktop" element={<Desktop />} />
           <Route path="/viewForm/:formId" element={<Desktop />} />
         </Routes>
