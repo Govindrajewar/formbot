@@ -42,19 +42,17 @@ function LoginPage() {
 
     if (!isValid) return;
 
+    setLoginError("");
+
     try {
       const response = await Login(email, password);
-      if (response.status === 201) {
-        const userName = response.data.user.userName;
-        alert("Login successful");
-        localStorage.setItem("formBotCurrentUser", userName);
-        localStorage.setItem("formBotToken", response.data.token);
-        navigate("/postlogin");
-      } else {
-        alert(response.data.message);
-      }
+      const userName = response.data.user.userName;
+      alert("Login successful");
+      localStorage.setItem("formBotCurrentUser", userName);
+      localStorage.setItem("formBotToken", response.data.token);
+      navigate("/postlogin");
     } catch (error) {
-      setLoginError(error.message);
+      setLoginError(error.response?.data?.message || "Login failed");
     }
   };
 

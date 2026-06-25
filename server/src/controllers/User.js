@@ -17,9 +17,15 @@ const signupUser = async (req, res) => {
       message: "User Signed Up successfully",
     });
   } catch (error) {
-    res.json({
+    if (error.code === 11000) {
+      return res.status(409).json({
+        status: "FAILED",
+        message: "That username or email is already in use",
+      });
+    }
+    res.status(500).json({
       status: "ERROR",
-      message: error.message,
+      message: "Something went wrong while signing up",
     });
   }
 };
@@ -29,22 +35,21 @@ const loginUser = async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email }).lean();
 
-    if (!user) {
-      res.json({
+    // Same message for both cases so a caller can't tell whether an email is registered.
+    const invalidCredentials = () =>
+      res.status(401).json({
         status: "FAILED",
-        message: "User is not Available, Please, Sign Up first",
+        message: "Invalid email or password",
       });
-      return;
+
+    if (!user) {
+      return invalidCredentials();
     }
 
     const isValidPassword = await bcrypt.compare(password, user.password);
 
     if (!isValidPassword) {
-      res.json({
-        status: "FAILED",
-        message: "You have entered a wrong password",
-      });
-      return;
+      return invalidCredentials();
     }
 
     delete user.password;
@@ -62,9 +67,9 @@ const loginUser = async (req, res) => {
       user: user,
     });
   } catch (error) {
-    res.json({
+    res.status(500).json({
       status: "ERROR",
-      message: error.message,
+      message: "Something went wrong while logging in",
     });
   }
 };
@@ -72,12 +77,6 @@ const loginUser = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const { userName, email, oldPassword, newPassword } = req.body;
-
-    if (!userName || !email || !oldPassword || !newPassword) {
-      return res
-        .status(400)
-        .json({ status: "FAILED", message: "All fields are required" });
-    }
 
     const user = await User.findById(req.user.id);
     if (!user) {
@@ -124,9 +123,9 @@ const updateUser = async (req, res) => {
         message: "That username or email is already in use",
       });
     }
-    res.status(400).json({
+    res.status(500).json({
       status: "ERROR",
-      message: error.message,
+      message: "Something went wrong while updating your profile",
     });
   }
 };

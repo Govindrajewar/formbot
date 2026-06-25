@@ -7,6 +7,11 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 // connect to server to Register User
 import { Register } from "../api/User.js";
+import {
+  isValidEmail,
+  isValidPassword,
+  PASSWORD_REQUIREMENT_MESSAGE,
+} from "../utils/validators.js";
 
 function SignupPage() {
   const navigate = useNavigate();
@@ -22,11 +27,7 @@ function SignupPage() {
   const [passwordError, setPasswordError] = useState("");
   const [usernameError, setUsernameError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
-
-  const validateEmail = (email) => {
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailPattern.test(email);
-  };
+  const [signupError, setSignupError] = useState("");
 
   const handleSignup = async () => {
     let isValid = true;
@@ -41,7 +42,7 @@ function SignupPage() {
     if (!email) {
       setEmailError("Email cannot be empty.");
       isValid = false;
-    } else if (!validateEmail(email)) {
+    } else if (!isValidEmail(email)) {
       setEmailError("Invalid email format.");
       isValid = false;
     } else {
@@ -50,6 +51,9 @@ function SignupPage() {
 
     if (!password) {
       setPasswordError("Password cannot be empty.");
+      isValid = false;
+    } else if (!isValidPassword(password)) {
+      setPasswordError(PASSWORD_REQUIREMENT_MESSAGE);
       isValid = false;
     } else if (password !== confirmPassword) {
       setConfirmPasswordError("Enter the same password in both fields.");
@@ -71,17 +75,15 @@ function SignupPage() {
     setPasswordError("");
     setUsernameError("");
     setConfirmPasswordError("");
+    setSignupError("");
 
     try {
-      const response = await Register(userName, email, password);
-      if (response.status === 201) {
-        alert("Registration successful");
-      }
+      await Register(userName, email, password);
+      alert("Registration successful");
+      navigate("/login");
     } catch (error) {
-      console.error("Registration error:", error);
+      setSignupError(error.response?.data?.message || "Registration failed");
     }
-
-    navigate("/login");
   };
 
   return (
@@ -151,6 +153,7 @@ function SignupPage() {
         {confirmPasswordError && (
           <div className="errorMessage">{confirmPasswordError}</div>
         )}
+        {signupError && <div className="errorMessage">{signupError}</div>}
 
         <div className="signup-btn" onClick={handleSignup}>
           Sign Up

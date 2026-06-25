@@ -8,8 +8,10 @@ const {
   getCurrentFormData,
 } = require("../controllers/FormData.js");
 const requireAuth = require("../middleware/auth.js");
+const validate = require("../middleware/validate.js");
+const { setFormDataSchema } = require("../validation/formDataValidation.js");
 
-router.post("/dynamic-items", requireAuth, setFormData);
+router.post("/dynamic-items", requireAuth, validate(setFormDataSchema), setFormData);
 
 router.get("/formdata", requireAuth, getFormData);
 

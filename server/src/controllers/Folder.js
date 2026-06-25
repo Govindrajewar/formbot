@@ -1,17 +1,12 @@
+const mongoose = require("mongoose");
 const Folder = require("../models/Folder.js");
 
 const createFolder = async (req, res) => {
   try {
-    const { name } = req.body;
-
-    if (!name || !name.trim()) {
-      return res.status(400).json({ message: "Folder name cannot be empty" });
-    }
-
-    const folder = await Folder.create({ name: name.trim(), userId: req.user.id });
+    const folder = await Folder.create({ name: req.body.name, userId: req.user.id });
     res.status(201).json(folder);
   } catch (error) {
-    res.status(400).json({ message: "Error creating folder", error: error.message });
+    res.status(500).json({ status: "ERROR", message: "Error creating folder" });
   }
 };
 
@@ -20,26 +15,34 @@ const getFolders = async (req, res) => {
     const folders = await Folder.find({ userId: req.user.id }).sort({ createdAt: 1 });
     res.status(200).json(folders);
   } catch (error) {
-    res.status(500).json({ message: "Error retrieving folders", error: error.message });
+    res.status(500).json({ status: "ERROR", message: "Error retrieving folders" });
   }
 };
 
 const deleteFolder = async (req, res) => {
   try {
-    const folder = await Folder.findById(req.params.folderId);
+    const folderId = req.params.folderId;
+
+    if (!mongoose.Types.ObjectId.isValid(folderId)) {
+      return res.status(400).json({ status: "FAILED", message: "Invalid folder ID" });
+    }
+
+    const folder = await Folder.findById(folderId);
 
     if (!folder) {
-      return res.status(404).json({ message: "Folder not found" });
+      return res.status(404).json({ status: "FAILED", message: "Folder not found" });
     }
 
     if (String(folder.userId) !== req.user.id) {
-      return res.status(403).json({ message: "You are not allowed to delete this folder" });
+      return res
+        .status(403)
+        .json({ status: "FAILED", message: "You are not allowed to delete this folder" });
     }
 
-    await Folder.deleteOne({ _id: req.params.folderId });
-    res.status(200).json({ message: "Folder deleted successfully" });
+    await Folder.deleteOne({ _id: folderId });
+    res.status(200).json({ status: "SUCCESS", message: "Folder deleted successfully" });
   } catch (error) {
-    res.status(500).json({ message: "Error deleting folder", error: error.message });
+    res.status(500).json({ status: "ERROR", message: "Error deleting folder" });
   }
 };
 

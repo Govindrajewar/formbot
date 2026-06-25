@@ -6,6 +6,11 @@ import profile from "../assets/Settings/profile.png";
 import view from "../assets/Settings/view.png";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../api/axiosInstance";
+import {
+  isValidEmail,
+  isValidPassword,
+  PASSWORD_REQUIREMENT_MESSAGE,
+} from "../utils/validators.js";
 
 function Settings() {
   const navigate = useNavigate();
@@ -30,11 +35,6 @@ function Settings() {
     newPassword: "",
   });
 
-  const isValidEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
   const handleUpdate = async () => {
     let errors = {};
 
@@ -54,6 +54,8 @@ function Settings() {
 
     if (!newPassword) {
       errors.newPassword = "New password cannot be empty";
+    } else if (!isValidPassword(newPassword)) {
+      errors.newPassword = PASSWORD_REQUIREMENT_MESSAGE;
     }
 
     setErrorMessages(errors);
