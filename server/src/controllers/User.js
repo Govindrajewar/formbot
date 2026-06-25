@@ -47,6 +47,8 @@ const loginUser = async (req, res) => {
       return;
     }
 
+    delete user.password;
+
     const jwToken = jwt.sign(user, process.env.jwtPrivateKey, {
       expiresIn: 6000,
     });
@@ -65,25 +67,7 @@ const loginUser = async (req, res) => {
   }
 };
 
-// TODO: Added for testing purposes. Remove at Deployment
-const getUsers = async (req, res) => {
-  try {
-    const users = await User.find();
-    res.json({
-      status: "SUCCESS",
-      data: users,
-    });
-  } catch (error) {
-    res.json({
-      status: "ERROR",
-      message: error.message,
-    });
-  }
-};
-
 module.exports = {
   signupUser,
   loginUser,
-  // TODO: Added for testing purposes. Remove at Deployment
-  getUsers,
 };
