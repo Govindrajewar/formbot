@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const FormData = require("../models/FormData.js");
+const { parsePagination, buildPaginatedResponse } = require("../utils/pagination.js");
 
 const setFormData = async (req, res) => {
   try {
@@ -19,8 +20,14 @@ const setFormData = async (req, res) => {
 
 const getFormData = async (req, res) => {
   try {
-    const data = await FormData.find({ userId: req.user.id });
-    res.status(200).json(data);
+    const { page, limit, skip } = parsePagination(req.query);
+
+    const [data, total] = await Promise.all([
+      FormData.find({ userId: req.user.id }).sort({ _id: -1 }).skip(skip).limit(limit),
+      FormData.countDocuments({ userId: req.user.id }),
+    ]);
+
+    res.status(200).json(buildPaginatedResponse(data, total, page, limit));
   } catch (error) {
     res.status(500).json({ status: "ERROR", message: "Error retrieving forms" });
   }

@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Response = require("../models/Response.js");
 const FormData = require("../models/FormData.js");
+const { parsePagination, buildPaginatedResponse } = require("../utils/pagination.js");
 
 const submitResponse = async (req, res) => {
   try {
@@ -42,8 +43,14 @@ const getResponses = async (req, res) => {
         .json({ status: "FAILED", message: "You are not allowed to view these responses" });
     }
 
-    const responses = await Response.find({ formId }).sort({ createdAt: -1 });
-    res.status(200).json(responses);
+    const { page, limit, skip } = parsePagination(req.query);
+
+    const [responses, total] = await Promise.all([
+      Response.find({ formId }).sort({ createdAt: -1 }).skip(skip).limit(limit),
+      Response.countDocuments({ formId }),
+    ]);
+
+    res.status(200).json(buildPaginatedResponse(responses, total, page, limit));
   } catch (error) {
     res.status(500).json({ status: "ERROR", message: "Error retrieving responses" });
   }

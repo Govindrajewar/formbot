@@ -4,18 +4,28 @@ import axiosInstance from "../../api/axiosInstance";
 
 function Response({ currentFormId }) {
   const [responses, setResponses] = useState([]);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(false);
+
+  const loadResponses = (pageToLoad) => {
+    axiosInstance
+      .get(`/formdata/${currentFormId}/responses?page=${pageToLoad}`)
+      .then((res) => {
+        setResponses((prev) => (pageToLoad === 1 ? res.data.data : [...prev, ...res.data.data]));
+        setPage(res.data.page);
+        setHasMore(res.data.page < res.data.totalPages);
+      })
+      .catch((error) => {
+        console.error("There was an error fetching responses!", error);
+      });
+  };
 
   useEffect(() => {
     if (!currentFormId) {
       return;
     }
-
-    axiosInstance
-      .get(`/formdata/${currentFormId}/responses`)
-      .then((res) => setResponses(res.data))
-      .catch((error) => {
-        console.error("There was an error fetching responses!", error);
-      });
+    loadResponses(1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentFormId]);
 
   if (!currentFormId || responses.length === 0) {
@@ -37,6 +47,11 @@ function Response({ currentFormId }) {
           ))}
         </div>
       ))}
+      {hasMore && (
+        <div className="load-more-responses" onClick={() => loadResponses(page + 1)}>
+          Load more
+        </div>
+      )}
     </div>
   );
 }

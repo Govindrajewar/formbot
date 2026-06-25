@@ -278,3 +278,15 @@
   height: 25px;
   width: 25px;
 }
+
+.load-more-forms {
+  color: #4b83ff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin: 10px;
+}
+
+.load-more-forms:hover {
+  text-decoration: underline;
+}

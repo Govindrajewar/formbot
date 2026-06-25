@@ -11,7 +11,7 @@ const itemSchema = new mongoose.Schema({
 const FormData = mongoose.model("FormData", {
   formName: String,
   user: String,
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", index: true },
   itemList: [itemSchema],
 });
 

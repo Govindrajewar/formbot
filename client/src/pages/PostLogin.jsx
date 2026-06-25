@@ -19,29 +19,42 @@ function PostLogin() {
   const [isDeleteFolder, setIsDeleteFolder] = useState(false);
   const [deleteIndexFolder, setDeleteIndexFolder] = useState(0);
   const [forms, setForms] = useState([]);
+  const [formsPage, setFormsPage] = useState(1);
+  const [hasMoreForms, setHasMoreForms] = useState(false);
 
   const navigate = useNavigate();
 
-  useEffect(() => {
+  const loadForms = (page) => {
     axiosInstance
-      .get(`/formdata`)
+      .get(`/formdata?page=${page}`)
       .then((response) => {
-        const userForms = response.data.map((item) => ({
+        const userForms = response.data.data.map((item) => ({
           formName: item.formName,
           formId: item._id,
         }));
-        setForms(userForms);
+        setForms((prevForms) => (page === 1 ? userForms : [...prevForms, ...userForms]));
+        setFormsPage(response.data.page);
+        setHasMoreForms(response.data.page < response.data.totalPages);
       })
       .catch((error) => {
         console.error("There was an error fetching the data!", error);
       });
+  };
+
+  useEffect(() => {
+    loadForms(1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const handleLoadMoreForms = () => {
+    loadForms(formsPage + 1);
+  };
 
   useEffect(() => {
     axiosInstance
-      .get(`/folders`)
+      .get(`/folders?limit=100`)
       .then((response) => {
-        setFolders(response.data);
+        setFolders(response.data.data);
       })
       .catch((error) => {
         console.error("There was an error fetching the folders!", error);
@@ -219,6 +232,11 @@ function PostLogin() {
                 </>
               ))}
             </div>
+            {hasMoreForms && (
+              <div className="load-more-forms" onClick={handleLoadMoreForms}>
+                Load more
+              </div>
+            )}
           </div>
         </div>
       </div>

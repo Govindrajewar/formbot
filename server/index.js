@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv").config();
 const cors = require("cors");
 const helmet = require("helmet");
+const compression = require("compression");
 const bodyParser = require("body-parser");
 const userRoutes = require("./src/routes/User.js");
 const formDataRoutes = require("./src/routes/FormData.js");
@@ -16,6 +17,7 @@ const allowedOrigins = (process.env.CLIENT_URL || "http://localhost:3000")
 
 const app = express();
 app.use(helmet());
+app.use(compression());
 app.use(cors({ origin: allowedOrigins }));
 app.use(bodyParser.json());
 app.use(express.json());

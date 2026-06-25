@@ -38,3 +38,16 @@
 .response-answer-type {
   color: #8a8a8a;
 }
+
+.load-more-responses {
+  color: #4b83ff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  padding: 8px;
+}
+
+.load-more-responses:hover {
+  text-decoration: underline;
+}

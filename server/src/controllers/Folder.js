@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Folder = require("../models/Folder.js");
+const { parsePagination, buildPaginatedResponse } = require("../utils/pagination.js");
 
 const createFolder = async (req, res) => {
   try {
@@ -12,8 +13,14 @@ const createFolder = async (req, res) => {
 
 const getFolders = async (req, res) => {
   try {
-    const folders = await Folder.find({ userId: req.user.id }).sort({ createdAt: 1 });
-    res.status(200).json(folders);
+    const { page, limit, skip } = parsePagination(req.query);
+
+    const [folders, total] = await Promise.all([
+      Folder.find({ userId: req.user.id }).sort({ createdAt: 1 }).skip(skip).limit(limit),
+      Folder.countDocuments({ userId: req.user.id }),
+    ]);
+
+    res.status(200).json(buildPaginatedResponse(folders, total, page, limit));
   } catch (error) {
     res.status(500).json({ status: "ERROR", message: "Error retrieving folders" });
   }

@@ -8,7 +8,7 @@ const answerSchema = new mongoose.Schema({
 
 const responseSchema = new mongoose.Schema(
   {
-    formId: { type: mongoose.Schema.Types.ObjectId, ref: "FormData", required: true },
+    formId: { type: mongoose.Schema.Types.ObjectId, ref: "FormData", required: true, index: true },
     answers: [answerSchema],
   },
   { timestamps: true }
