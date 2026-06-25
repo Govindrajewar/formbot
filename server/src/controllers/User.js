@@ -2,6 +2,8 @@ const bcrypt = require("bcrypt");
 const User = require("../models/User.js");
 var jwt = require("jsonwebtoken");
 
+const JWT_EXPIRES_IN_SECONDS = 6000; // 100 minutes
+
 const signupUser = async (req, res) => {
   try {
     const { userName, email, password } = req.body;
@@ -57,7 +59,7 @@ const loginUser = async (req, res) => {
     const jwToken = jwt.sign(
       { id: user._id, email: user.email, userName: user.userName },
       process.env.jwtPrivateKey,
-      { expiresIn: 6000 }
+      { expiresIn: JWT_EXPIRES_IN_SECONDS }
     );
 
     res.status(201).json({
@@ -107,7 +109,7 @@ const updateUser = async (req, res) => {
         userName: updatedUser.userName,
       },
       process.env.jwtPrivateKey,
-      { expiresIn: 6000 }
+      { expiresIn: JWT_EXPIRES_IN_SECONDS }
     );
 
     res.status(200).json({

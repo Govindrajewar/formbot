@@ -16,6 +16,20 @@ const INPUT_TYPES = [
   "buttonInput",
 ];
 
+// Config for the generic <input> rendered by every input type except ratingInput
+// (which gets its own star-picker UI below). NOTE: dateInput and buttonInput share
+// the same entry here because that's the pre-existing behavior being preserved -
+// buttonInput previously fell through to dateInput's type/placeholder and an
+// unrelated "rating-input" class. Flagged separately as a bug to fix or not.
+const RUNTIME_INPUT_CONFIG = {
+  textInput: { htmlType: "text", placeholder: "Enter your text", className: "text-input" },
+  numberInput: { htmlType: "number", placeholder: "Enter your number", className: "number-input" },
+  emailInput: { htmlType: "email", placeholder: "Enter your email", className: "email-input" },
+  phoneInput: { htmlType: "tel", placeholder: "Enter your phone number", className: "phone-input" },
+  dateInput: { htmlType: "date", placeholder: "Enter your date", className: "date-input" },
+  buttonInput: { htmlType: "date", placeholder: "Enter your date", className: "rating-input" },
+};
+
 function Desktop() {
   const location = useLocation();
   const currentFormId = location.pathname.split("/").at(2);
@@ -76,14 +90,7 @@ function Desktop() {
     const updatedData = {
       ...data,
       itemList: data.itemList.map((item, itemIndex) =>
-        itemIndex === index &&
-        (item.type === "textInput" ||
-          item.type === "numberInput" ||
-          item.type === "emailInput" ||
-          item.type === "phoneInput" ||
-          item.type === "dateInput" ||
-          item.type === "ratingInput" ||
-          item.type === "buttonInput")
+        itemIndex === index && INPUT_TYPES.includes(item.type)
           ? { ...item, value: inputValues[index] || "" }
           : item
       ),
@@ -131,31 +138,12 @@ function Desktop() {
 
             {data.itemList && data.itemList.length > 0 ? (
               data.itemList.map((item, index) => {
-                // eslint-disable-next-line
-                const isInputEmpty =
-                  (item.type === "textInput" ||
-                    item.type === "numberInput" ||
-                    item.type === "emailInput" ||
-                    item.type === "phoneInput" ||
-                    item.type === "dateInput" ||
-                    item.type === "ratingInput" ||
-                    item.type === "buttonInput") &&
-                  !inputValues[index];
+                const isInput = INPUT_TYPES.includes(item.type);
 
                 return (
                   <div
                     key={index}
-                    className={`data-container ${
-                      item.type === "textInput" ||
-                      item.type === "numberInput" ||
-                      item.type === "emailInput" ||
-                      item.type === "phoneInput" ||
-                      item.type === "dateInput" ||
-                      item.type === "ratingInput" ||
-                      item.type === "buttonInput"
-                        ? "right"
-                        : "left"
-                    }`}
+                    className={`data-container ${isInput ? "right" : "left"}`}
                   >
                     {item.type === "image" || item.type === "gif" ? (
                       <img
@@ -167,13 +155,7 @@ function Desktop() {
                       <video src={item.value} controls className="data-video">
                         Your browser does not support the video tag.
                       </video>
-                    ) : item.type !== "textInput" &&
-                      item.type !== "numberInput" &&
-                      item.type !== "emailInput" &&
-                      item.type !== "phoneInput" &&
-                      item.type !== "dateInput" &&
-                      item.type !== "ratingInput" &&
-                      item.type !== "buttonInput" ? (
+                    ) : !isInput ? (
                       <>
                         <img src={icon} alt="icon" className="data-icon" />
                         <p className="chat-bubble">{item.value}</p>
@@ -207,42 +189,10 @@ function Desktop() {
                           </div>
                         ) : (
                           <input
-                            type={
-                              item.type === "textInput"
-                                ? "text"
-                                : item.type === "numberInput"
-                                ? "number"
-                                : item.type === "emailInput"
-                                ? "email"
-                                : item.type === "phoneInput"
-                                ? "tel"
-                                : "date"
-                            }
+                            type={RUNTIME_INPUT_CONFIG[item.type]?.htmlType}
                             value={inputValues[index] || ""}
-                            placeholder={
-                              item.type === "textInput"
-                                ? "Enter your text"
-                                : item.type === "numberInput"
-                                ? "Enter your number"
-                                : item.type === "emailInput"
-                                ? "Enter your email"
-                                : item.type === "phoneInput"
-                                ? "Enter your phone number"
-                                : "Enter your date"
-                            }
-                            className={
-                              item.type === "textInput"
-                                ? "text-input"
-                                : item.type === "numberInput"
-                                ? "number-input"
-                                : item.type === "emailInput"
-                                ? "email-input"
-                                : item.type === "phoneInput"
-                                ? "phone-input"
-                                : item.type === "dateInput"
-                                ? "date-input"
-                                : "rating-input"
-                            }
+                            placeholder={RUNTIME_INPUT_CONFIG[item.type]?.placeholder}
+                            className={RUNTIME_INPUT_CONFIG[item.type]?.className}
                             onChange={(e) =>
                               handleInputChange(
                                 index,

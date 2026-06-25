@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
 import "../style/Workspace/Workspace.css";
 import WorkspaceNavBar from "../components/Workspace/WorkspaceNavBar.jsx";
 import Flow from "../components/Workspace/Flow.jsx";
@@ -8,10 +7,6 @@ import Response from "../components/Workspace/Response.jsx";
 import axiosInstance from "../api/axiosInstance";
 
 function Workspace() {
-  const location = useLocation();
-
-  // eslint-disable-next-line
-  const [user, setUser] = useState(location.state?.userName);
   const [activeComponent, setActiveComponent] = useState("Flow");
   const [formName, setFormName] = useState("");
   const [dynamicItems, setDynamicItems] = useState([]);
@@ -46,7 +41,6 @@ function Workspace() {
 
     const dataToSave = {
       formName,
-      user,
       itemList: dynamicItems,
     };
 

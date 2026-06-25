@@ -7,7 +7,6 @@ const setFormData = async (req, res) => {
     const formData = new FormData({
       formName: req.body.formName,
       itemList: req.body.itemList,
-      user: req.user.userName,
       userId: req.user.id,
     });
     await formData.save();

@@ -17,19 +17,131 @@ import dateInput from "../../assets/Workspace/Flow/Inputs/date.png";
 import ratingInput from "../../assets/Workspace/Flow/Inputs/rating.png";
 import buttonInput from "../../assets/Workspace/Flow/Inputs/button.png";
 
-function Flow({
-  dynamicItems,
-  setDynamicItems,
-  itemCounts,
-  setItemCounts,
-}) {
-  const handleAddItem = (type, src, placeholder) => {
+const ITEM_TYPES = {
+  text: {
+    category: "bubble",
+    icon: textBubble,
+    paletteLabel: "Text",
+    paletteAlt: "Text Bubble",
+    headerLabel: "Text",
+    itemAlt: "Text Bubble",
+    placeholder: "Click here to edit",
+    htmlType: "text",
+  },
+  image: {
+    category: "bubble",
+    icon: image,
+    paletteLabel: "Image",
+    paletteAlt: "Images Bubble",
+    headerLabel: "Image",
+    itemAlt: "Images Item",
+    placeholder: "Click to add link",
+    htmlType: "text",
+  },
+  video: {
+    category: "bubble",
+    icon: video,
+    paletteLabel: "Video",
+    paletteAlt: "Video Bubble",
+    headerLabel: "Video",
+    itemAlt: "Video Item",
+    placeholder: "Click to add link",
+    htmlType: "text",
+  },
+  gif: {
+    category: "bubble",
+    icon: gif,
+    paletteLabel: "GIF",
+    paletteAlt: "GIF Bubble",
+    headerLabel: "GIF",
+    itemAlt: "GIF Item",
+    placeholder: "Click to add link",
+    htmlType: "text",
+  },
+  textInput: {
+    category: "input",
+    icon: textInput,
+    paletteLabel: "Text",
+    paletteAlt: "Text Input",
+    headerLabel: "Input Text",
+    itemAlt: "Text Input",
+    placeholder: "Hint: User will input text on the form",
+    htmlType: "text",
+  },
+  numberInput: {
+    category: "input",
+    icon: numberInput,
+    paletteLabel: "Number",
+    paletteAlt: "Number Input",
+    headerLabel: "Input Number",
+    itemAlt: "Number Input",
+    placeholder: "Hint: User will input a number on the form",
+    htmlType: "number",
+  },
+  emailInput: {
+    category: "input",
+    icon: emailInput,
+    paletteLabel: "Email",
+    paletteAlt: "Email Input",
+    headerLabel: "Input Email",
+    itemAlt: "Email Input",
+    placeholder: "Hint: User will input an email on the form",
+    htmlType: "email",
+  },
+  phoneInput: {
+    category: "input",
+    icon: phoneInput,
+    paletteLabel: "Phone",
+    paletteAlt: "Phone Input",
+    headerLabel: "Input Phone",
+    itemAlt: "Phone Input",
+    placeholder: "Hint: User will input a phone number on the form",
+    htmlType: "tel",
+  },
+  dateInput: {
+    category: "input",
+    icon: dateInput,
+    paletteLabel: "Date",
+    paletteAlt: "Date Input",
+    headerLabel: "Input Date",
+    itemAlt: "Date Input",
+    placeholder: "Hint: User will select a date",
+    htmlType: "text",
+  },
+  ratingInput: {
+    category: "input",
+    icon: ratingInput,
+    paletteLabel: "Rating",
+    paletteAlt: "Rating Input",
+    headerLabel: "Input Rating",
+    itemAlt: "Rating Input",
+    placeholder: "Hint: User will tap to rate out of 5",
+    htmlType: "text",
+  },
+  buttonInput: {
+    category: "input",
+    icon: buttonInput,
+    paletteLabel: "Button",
+    paletteAlt: "Button Input",
+    headerLabel: "Input Button",
+    itemAlt: "Button Input",
+    placeholder: "",
+    htmlType: "button",
+  },
+};
+
+const BUBBLE_TYPES = Object.entries(ITEM_TYPES).filter(([, cfg]) => cfg.category === "bubble");
+const INPUT_PALETTE_TYPES = Object.entries(ITEM_TYPES).filter(([, cfg]) => cfg.category === "input");
+
+function Flow({ dynamicItems, setDynamicItems, itemCounts, setItemCounts }) {
+  const handleAddItem = (type) => {
+    const config = ITEM_TYPES[type];
     const newId = itemCounts[type] + 1;
     const newItem = {
       id: `${type}-${newId}`,
       type,
-      src,
-      placeholder,
+      src: config.icon,
+      placeholder: config.placeholder,
       value: "",
     };
 
@@ -59,125 +171,30 @@ function Flow({
         <div className="flow-container">
           <div className="sub-header sub-header-bubbles">Bubbles</div>
           <div className="bubbles">
-            <div
-              className="bubble"
-              onClick={() =>
-                handleAddItem("text", textBubble, "Click here to edit")
-              }
-            >
-              <img src={textBubble} alt="Text Bubble" />
-              Text
-            </div>
-            <div
-              className="bubble"
-              onClick={() => handleAddItem("image", image, "Click to add link")}
-            >
-              <img src={image} alt="Images Bubble" />
-              Image
-            </div>
-            <div
-              className="bubble"
-              onClick={() => handleAddItem("video", video, "Click to add link")}
-            >
-              <img src={video} alt="Video Bubble" />
-              Video
-            </div>
-            <div
-              className="bubble"
-              onClick={() => handleAddItem("gif", gif, "Click to add link")}
-            >
-              <img src={gif} alt="GIF Bubble" />
-              GIF
-            </div>
+            {BUBBLE_TYPES.map(([type, config]) => (
+              <div
+                className="bubble"
+                key={type}
+                onClick={() => handleAddItem(type)}
+              >
+                <img src={config.icon} alt={config.paletteAlt} />
+                {config.paletteLabel}
+              </div>
+            ))}
           </div>
 
           <div className="sub-header">Inputs</div>
           <div className="bubbles">
-            <div
-              className="bubble"
-              onClick={() =>
-                handleAddItem(
-                  "textInput",
-                  textInput,
-                  "Hint: User will input text on the form"
-                )
-              }
-            >
-              <img src={textInput} alt="Text Input" />
-              Text
-            </div>
-            <div
-              className="bubble"
-              onClick={() =>
-                handleAddItem(
-                  "numberInput",
-                  numberInput,
-                  "Hint: User will input a number on the form"
-                )
-              }
-            >
-              <img src={numberInput} alt="Number Input" />
-              Number
-            </div>
-            <div
-              className="bubble"
-              onClick={() =>
-                handleAddItem(
-                  "emailInput",
-                  emailInput,
-                  "Hint: User will input an email on the form"
-                )
-              }
-            >
-              <img src={emailInput} alt="Email Input" />
-              Email
-            </div>
-            <div
-              className="bubble"
-              onClick={() =>
-                handleAddItem(
-                  "phoneInput",
-                  phoneInput,
-                  "Hint: User will input a phone number on the form"
-                )
-              }
-            >
-              <img src={phoneInput} alt="Phone Input" />
-              Phone
-            </div>
-            <div
-              className="bubble"
-              onClick={() =>
-                handleAddItem(
-                  "dateInput",
-                  dateInput,
-                  "Hint: User will select a date"
-                )
-              }
-            >
-              <img src={dateInput} alt="Date Input" />
-              Date
-            </div>
-            <div
-              className="bubble"
-              onClick={() =>
-                handleAddItem(
-                  "ratingInput",
-                  ratingInput,
-                  "Hint: User will tap to rate out of 5"
-                )
-              }
-            >
-              <img src={ratingInput} alt="Rating Input" />
-              Rating
-            </div>
-            <div
-              className="bubble"
-              onClick={() => handleAddItem("buttonInput", buttonInput, "")}
-            >
-              <img src={buttonInput} alt="Button Input" />
-              Button
-            </div>
+            {INPUT_PALETTE_TYPES.map(([type, config]) => (
+              <div
+                className="bubble"
+                key={type}
+                onClick={() => handleAddItem(type)}
+              >
+                <img src={config.icon} alt={config.paletteAlt} />
+                {config.paletteLabel}
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -187,164 +204,42 @@ function Flow({
           <img src={start} alt="start" />
           Start
         </div>
-        {dynamicItems.map((item) => (
-          <div className="text-item" key={item.id}>
-            <img
-              src={deleteLogo}
-              alt="delete"
-              id="deleteId"
-              onClick={() => handleDeleteItem(item.id)}
-            />
-            <div className="item-header">
-              {item.type === "text"
-                ? `Text ${item.id.split("-")[1]}`
-                : item.type === "image"
-                ? `Image ${item.id.split("-")[1]}`
-                : item.type === "video"
-                ? `Video ${item.id.split("-")[1]}`
-                : item.type === "gif"
-                ? `GIF ${item.id.split("-")[1]}`
-                : item.type === "textInput"
-                ? `Input Text ${item.id.split("-")[1]}`
-                : item.type === "numberInput"
-                ? `Input Number ${item.id.split("-")[1]}`
-                : item.type === "emailInput"
-                ? `Input Email ${item.id.split("-")[1]}`
-                : item.type === "phoneInput"
-                ? `Input Phone ${item.id.split("-")[1]}`
-                : item.type === "dateInput"
-                ? `Input Date ${item.id.split("-")[1]}`
-                : item.type === "ratingInput"
-                ? `Input Rating ${item.id.split("-")[1]}`
-                : item.type === "buttonInput"
-                ? `Input Button ${item.id.split("-")[1]}`
-                : "Unknown"}
-            </div>
+        {dynamicItems.map((item) => {
+          const config = ITEM_TYPES[item.type];
 
-            <div className="item-data">
-              {item.type === "text" ? (
-                <>
-                  <img src={textBubble} alt="Text Bubble" />
-                  <input
-                    type="text"
-                    placeholder={item.placeholder}
-                    value={item.value}
-                    onChange={(e) => handleInputChange(item.id, e.target.value)}
-                  />
-                </>
-              ) : item.type === "image" ? (
-                <>
-                  <img src={item.src} alt="Images Item" />
-                  <input
-                    type="text"
-                    placeholder={item.placeholder}
-                    value={item.value}
-                    onChange={(e) => handleInputChange(item.id, e.target.value)}
-                  />
-                </>
-              ) : item.type === "video" ? (
-                <>
-                  <img src={item.src} alt="Video Item" />
-                  <input
-                    type="text"
-                    placeholder={item.placeholder}
-                    value={item.value}
-                    onChange={(e) => handleInputChange(item.id, e.target.value)}
-                  />
-                </>
-              ) : item.type === "gif" ? (
-                <>
-                  <img src={item.src} alt="GIF Item" />
-                  <input
-                    type="text"
-                    placeholder={item.placeholder}
-                    value={item.value}
-                    onChange={(e) => handleInputChange(item.id, e.target.value)}
-                  />
-                </>
-              ) : item.type === "textInput" ? (
-                <>
-                  <img src={item.src} alt="Text Input" />
-                  <input
-                    type="text"
-                    placeholder={item.placeholder}
-                    value={item.value}
-                    onChange={(e) => handleInputChange(item.id, e.target.value)}
-                    disabled
-                  />
-                </>
-              ) : item.type === "numberInput" ? (
-                <>
-                  <img src={item.src} alt="Number Input" />
-                  <input
-                    type="number"
-                    placeholder={item.placeholder}
-                    value={item.value}
-                    onChange={(e) => handleInputChange(item.id, e.target.value)}
-                    disabled
-                  />
-                </>
-              ) : item.type === "emailInput" ? (
-                <>
-                  <img src={item.src} alt="Email Input" />
-                  <input
-                    type="email"
-                    placeholder={item.placeholder}
-                    value={item.value}
-                    onChange={(e) => handleInputChange(item.id, e.target.value)}
-                    disabled
-                  />
-                </>
-              ) : item.type === "phoneInput" ? (
-                <>
-                  <img src={item.src} alt="Phone Input" />
-                  <input
-                    type="tel"
-                    placeholder={item.placeholder}
-                    value={item.value}
-                    onChange={(e) => handleInputChange(item.id, e.target.value)}
-                    disabled
-                  />
-                </>
-              ) : item.type === "dateInput" ? (
-                <>
-                  <img src={item.src} alt="Date Input" />
-                  <input
-                    type="text"
-                    placeholder={item.placeholder}
-                    value={item.value}
-                    onChange={(e) => handleInputChange(item.id, e.target.value)}
-                    disabled
-                  />
-                </>
-              ) : item.type === "ratingInput" ? (
-                <>
-                  <img src={item.src} alt="Rating Input" />
-                  <input
-                    type="text"
-                    placeholder={item.placeholder}
-                    value={item.value}
-                    onChange={(e) => handleInputChange(item.id, e.target.value)}
-                    disabled
-                  />
-                </>
-              ) : item.type === "buttonInput" ? (
-                <>
-                  <img src={item.src} alt="Button Input" />
-                  <input
-                    type="button"
-                    placeholder={item.placeholder}
-                    value={item.value}
-                    onChange={(e) => handleInputChange(item.id, e.target.value)}
-                    disabled
-                  />
-                </>
-              ) : (
-                <div>Unknown Item Type</div>
-              )}
+          return (
+            <div className="text-item" key={item.id}>
+              <img
+                src={deleteLogo}
+                alt="delete"
+                id="deleteId"
+                onClick={() => handleDeleteItem(item.id)}
+              />
+              <div className="item-header">
+                {config
+                  ? `${config.headerLabel} ${item.id.split("-")[1]}`
+                  : "Unknown"}
+              </div>
+
+              <div className="item-data">
+                {config ? (
+                  <>
+                    <img src={item.src} alt={config.itemAlt} />
+                    <input
+                      type={config.htmlType}
+                      placeholder={item.placeholder}
+                      value={item.value}
+                      onChange={(e) => handleInputChange(item.id, e.target.value)}
+                      disabled={config.category === "input"}
+                    />
+                  </>
+                ) : (
+                  <div>Unknown Item Type</div>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

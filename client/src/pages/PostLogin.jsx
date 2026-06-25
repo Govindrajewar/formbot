@@ -134,7 +134,7 @@ function PostLogin() {
   };
 
   const createTypeBot = () => {
-    navigate("/Workspace", { state: { userName } });
+    navigate("/Workspace");
   };
 
   // TODO: Modify the delete functionality in backend
