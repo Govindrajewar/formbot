@@ -28,8 +28,11 @@ function SignupPage() {
   const [usernameError, setUsernameError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
   const [signupError, setSignupError] = useState("");
+  const [isSigningUp, setIsSigningUp] = useState(false);
 
   const handleSignup = async () => {
+    if (isSigningUp) return;
+
     let isValid = true;
 
     if (!userName) {
@@ -76,6 +79,7 @@ function SignupPage() {
     setUsernameError("");
     setConfirmPasswordError("");
     setSignupError("");
+    setIsSigningUp(true);
 
     try {
       await Register(userName, email, password);
@@ -83,6 +87,8 @@ function SignupPage() {
       navigate("/login");
     } catch (error) {
       setSignupError(error.response?.data?.message || "Registration failed");
+    } finally {
+      setIsSigningUp(false);
     }
   };
 
@@ -155,8 +161,12 @@ function SignupPage() {
         )}
         {signupError && <div className="errorMessage">{signupError}</div>}
 
-        <div className="signup-btn" onClick={handleSignup}>
-          Sign Up
+        <div
+          className="signup-btn"
+          onClick={handleSignup}
+          style={isSigningUp ? { opacity: 0.6, pointerEvents: "none" } : undefined}
+        >
+          {isSigningUp ? "Signing up..." : "Sign Up"}
         </div>
 
         <div className="signup-text">

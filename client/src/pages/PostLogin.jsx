@@ -21,6 +21,7 @@ function PostLogin() {
   const [forms, setForms] = useState([]);
   const [formsPage, setFormsPage] = useState(1);
   const [hasMoreForms, setHasMoreForms] = useState(false);
+  const [isLoadingForms, setIsLoadingForms] = useState(true);
 
   const navigate = useNavigate();
 
@@ -38,6 +39,9 @@ function PostLogin() {
       })
       .catch((error) => {
         console.error("There was an error fetching the data!", error);
+      })
+      .finally(() => {
+        setIsLoadingForms(false);
       });
   };
 
@@ -212,26 +216,34 @@ function PostLogin() {
             Create a TypeBot
           </div>
           <div className="form-names">
-            <div className="form-list">
-              {forms.map(({ formName, formId }, index) => (
-                <>
-                  <div
-                    className="form-list-item"
-                    key={index}
-                    onClick={() => goToForm(formId)}
-                  >
-                    <span>{formName}</span>
-                  </div>
+            {isLoadingForms ? (
+              <div className="forms-status-message">Loading your forms...</div>
+            ) : forms.length === 0 ? (
+              <div className="forms-status-message">
+                No forms yet - create one to get started.
+              </div>
+            ) : (
+              <div className="form-list">
+                {forms.map(({ formName, formId }, index) => (
+                  <>
+                    <div
+                      className="form-list-item"
+                      key={index}
+                      onClick={() => goToForm(formId)}
+                    >
+                      <span>{formName}</span>
+                    </div>
 
-                  <img
-                    src={deleteIcon}
-                    alt="delete Icon"
-                    className="delete-form-icon"
-                    onClick={() => handleDeleteForm(formId)}
-                  />
-                </>
-              ))}
-            </div>
+                    <img
+                      src={deleteIcon}
+                      alt="delete Icon"
+                      className="delete-form-icon"
+                      onClick={() => handleDeleteForm(formId)}
+                    />
+                  </>
+                ))}
+              </div>
+            )}
             {hasMoreForms && (
               <div className="load-more-forms" onClick={handleLoadMoreForms}>
                 Load more

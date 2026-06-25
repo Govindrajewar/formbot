@@ -279,6 +279,12 @@
   width: 25px;
 }
 
+.forms-status-message {
+  color: #a0a0a0;
+  font-size: 16px;
+  padding: 20px 10px;
+}
+
 .load-more-forms {
   color: #4b83ff;
   font-size: 16px;

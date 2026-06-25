@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "../style/Settings/Settings.css";
 import lock from "../assets/Settings/lock.png";
 import logout from "../assets/Settings/logout.png";
@@ -11,6 +11,7 @@ import {
   isValidPassword,
   PASSWORD_REQUIREMENT_MESSAGE,
 } from "../utils/validators.js";
+import { decodeToken } from "../utils/jwt.js";
 
 function Settings() {
   const navigate = useNavigate();
@@ -34,8 +35,19 @@ function Settings() {
     oldPassword: "",
     newPassword: "",
   });
+  const [isUpdating, setIsUpdating] = useState(false);
+
+  useEffect(() => {
+    const decoded = decodeToken(localStorage.getItem("formBotToken"));
+    if (decoded) {
+      setName(decoded.userName || "");
+      setEmail(decoded.email || "");
+    }
+  }, []);
 
   const handleUpdate = async () => {
+    if (isUpdating) return;
+
     let errors = {};
 
     if (!name) {
@@ -64,6 +76,8 @@ function Settings() {
       return;
     }
 
+    setIsUpdating(true);
+
     try {
       const response = await axiosInstance.patch("/user", {
         userName: name,
@@ -88,6 +102,8 @@ function Settings() {
       } else {
         setErrorMessages({ newPassword: message });
       }
+    } finally {
+      setIsUpdating(false);
     }
   };
 
@@ -155,8 +171,8 @@ function Settings() {
         <div className="settings-error">{errorMessages.newPassword}</div>
       )}
 
-      <button type="button" id="update-btn" onClick={handleUpdate}>
-        Update
+      <button type="button" id="update-btn" onClick={handleUpdate} disabled={isUpdating}>
+        {isUpdating ? "Updating..." : "Update"}
       </button>
 
       <div className="logout-container" onClick={handleLogout}>

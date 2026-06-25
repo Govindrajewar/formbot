@@ -18,6 +18,7 @@ function LoginPage() {
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [loginError, setLoginError] = useState("");
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   const validateEmail = (email) => {
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -25,6 +26,8 @@ function LoginPage() {
   };
 
   const handleLogin = async () => {
+    if (isLoggingIn) return;
+
     let isValid = true;
 
     if (!email) {
@@ -43,6 +46,7 @@ function LoginPage() {
     if (!isValid) return;
 
     setLoginError("");
+    setIsLoggingIn(true);
 
     try {
       const response = await Login(email, password);
@@ -53,6 +57,8 @@ function LoginPage() {
       navigate("/postlogin");
     } catch (error) {
       setLoginError(error.response?.data?.message || "Login failed");
+    } finally {
+      setIsLoggingIn(false);
     }
   };
 
@@ -88,8 +94,12 @@ function LoginPage() {
         {passwordError && <div className="errorMessage">{passwordError}</div>}
         {loginError && <div className="errorMessage">{loginError}</div>}
         <br />
-        <div className="login-btn" onClick={handleLogin}>
-          Log in
+        <div
+          className="login-btn"
+          onClick={handleLogin}
+          style={isLoggingIn ? { opacity: 0.6, pointerEvents: "none" } : undefined}
+        >
+          {isLoggingIn ? "Logging in..." : "Log in"}
         </div>
         <div className="login-text">
           Don’t have an account? <a href="/signup">Register now</a>

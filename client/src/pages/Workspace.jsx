@@ -29,8 +29,11 @@ function Workspace() {
     buttonInput: 0,
   });
   const [currentFormId, setCurrentFormId] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    if (isSaving) return;
+
     if (!formName) {
       alert("Enter Form Name");
       return;
@@ -47,19 +50,17 @@ function Workspace() {
       itemList: dynamicItems,
     };
 
-    console.log(dataToSave);
+    setIsSaving(true);
 
-    axiosInstance
-      .post(`/dynamic-items`, dataToSave)
-      .then((response) => {
-        console.log("Items saved:", response.data);
-        setCurrentFormId(response.data._id);
-      })
-      .catch((error) => {
-        console.error("There was an error saving the items!", error);
-      });
-
-    alert("Form Saved Successfully");
+    try {
+      const response = await axiosInstance.post(`/dynamic-items`, dataToSave);
+      setCurrentFormId(response.data._id);
+      alert("Form Saved Successfully");
+    } catch (error) {
+      alert(error.response?.data?.message || "There was an error saving the form");
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -70,6 +71,7 @@ function Workspace() {
         setFormName={setFormName}
         handleSave={handleSave}
         currentFormId={currentFormId}
+        isSaving={isSaving}
       />
       {activeComponent === "Flow" && (
         <Flow

@@ -9,6 +9,7 @@ function WorkspaceNavBar({
   setFormName,
   handleSave,
   currentFormId,
+  isSaving,
 }) {
   const navigate = useNavigate();
   const [selectedItem, setSelectedItem] = useState("Flow");
@@ -67,8 +68,8 @@ function WorkspaceNavBar({
         <button className="share-btn" onClick={handleShareForm}>
           Share
         </button>
-        <button className="save-btn" onClick={handleSave}>
-          Save
+        <button className="save-btn" onClick={handleSave} disabled={isSaving}>
+          {isSaving ? "Saving..." : "Save"}
         </button>
         <img src={close} alt="close" onClick={handleClose} />
       </div>

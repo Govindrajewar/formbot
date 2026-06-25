@@ -23,6 +23,7 @@ function Desktop() {
   const [inputValues, setInputValues] = useState({});
   const [errors, setErrors] = useState({});
   const [isDisabled, setIsDisabled] = useState({});
+  const [fetchError, setFetchError] = useState("");
 
   useEffect(() => {
     axios
@@ -34,6 +35,9 @@ function Desktop() {
       })
       .catch((error) => {
         console.error("There was an error fetching the data!", error);
+        setFetchError(
+          error.response?.data?.message || "This form could not be loaded"
+        );
       });
   }, [currentFormId]);
 
@@ -270,6 +274,8 @@ function Desktop() {
               <p>No items to display.</p>
             )}
           </>
+        ) : fetchError ? (
+          <p className="loading-message">{fetchError}</p>
         ) : (
           <p className="loading-message">Loading data...</p>
         )}
