@@ -37,6 +37,17 @@ function PostLogin() {
       });
   }, []);
 
+  useEffect(() => {
+    axiosInstance
+      .get(`/folders`)
+      .then((response) => {
+        setFolders(response.data);
+      })
+      .catch((error) => {
+        console.error("There was an error fetching the folders!", error);
+      });
+  }, []);
+
   const goToForm = (formId) => {
     navigate(`/viewForm/${formId}`);
   };
@@ -53,7 +64,14 @@ function PostLogin() {
 
   const handleCreateFolder = () => {
     if (newFolderName.trim() !== "") {
-      setFolders([...folders, newFolderName]);
+      axiosInstance
+        .post(`/folders`, { name: newFolderName.trim() })
+        .then((response) => {
+          setFolders([...folders, response.data]);
+        })
+        .catch((error) => {
+          console.error("There was an error creating the folder!", error);
+        });
       setNewFolderName("");
       setIsCreateFolder(!isCreateFolder);
     }
@@ -65,8 +83,17 @@ function PostLogin() {
   };
 
   const handleDeleteFolder = () => {
-    const updatedFolders = folders.filter((_, i) => i !== deleteIndexFolder);
-    setFolders(updatedFolders);
+    const folderToDelete = folders[deleteIndexFolder];
+
+    axiosInstance
+      .delete(`/folders/${folderToDelete._id}`)
+      .then(() => {
+        setFolders(folders.filter((_, i) => i !== deleteIndexFolder));
+      })
+      .catch((error) => {
+        console.error("There was an error deleting the folder!", error);
+      });
+
     setIsDeleteFolder(!isDeleteFolder);
   };
 
@@ -149,8 +176,8 @@ function PostLogin() {
           </div>
           <div className="tabs">
             {folders.map((folder, index) => (
-              <div className="tab" key={index}>
-                {folder}
+              <div className="tab" key={folder._id}>
+                {folder.name}
                 <span
                   className="delete-icon"
                   onClick={() => deleteFolder(index)}

@@ -81,7 +81,9 @@ function Workspace() {
         />
       )}
       {activeComponent === "Theme" && <Theme />}
-      {activeComponent === "Response" && <Response />}
+      {activeComponent === "Response" && (
+        <Response currentFormId={currentFormId} />
+      )}
     </div>
   );
 }

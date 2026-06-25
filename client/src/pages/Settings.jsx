@@ -5,6 +5,7 @@ import logout from "../assets/Settings/logout.png";
 import profile from "../assets/Settings/profile.png";
 import view from "../assets/Settings/view.png";
 import { useNavigate } from "react-router-dom";
+import axiosInstance from "../api/axiosInstance";
 
 function Settings() {
   const navigate = useNavigate();
@@ -34,7 +35,7 @@ function Settings() {
     return emailRegex.test(email);
   };
 
-  const handleUpdate = () => {
+  const handleUpdate = async () => {
     let errors = {};
 
     if (!name) {
@@ -56,6 +57,36 @@ function Settings() {
     }
 
     setErrorMessages(errors);
+
+    if (Object.keys(errors).length > 0) {
+      return;
+    }
+
+    try {
+      const response = await axiosInstance.patch("/user", {
+        userName: name,
+        email,
+        oldPassword,
+        newPassword,
+      });
+
+      localStorage.setItem("formBotCurrentUser", response.data.user.userName);
+      localStorage.setItem("formBotToken", response.data.token);
+      setOldPassword("");
+      setNewPassword("");
+      alert("Profile updated successfully");
+    } catch (error) {
+      const message =
+        error.response?.data?.message || "Failed to update profile";
+
+      if (message.toLowerCase().includes("old password")) {
+        setErrorMessages({ oldPassword: message });
+      } else if (message.toLowerCase().includes("already in use")) {
+        setErrorMessages({ email: message });
+      } else {
+        setErrorMessages({ newPassword: message });
+      }
+    }
   };
 
   return (

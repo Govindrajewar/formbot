@@ -6,6 +6,16 @@ import send from "../assets/Desktop/send.png";
 import { useLocation } from "react-router-dom";
 import { BACKEND_URL } from "../deploymentLink";
 
+const INPUT_TYPES = [
+  "textInput",
+  "numberInput",
+  "emailInput",
+  "phoneInput",
+  "dateInput",
+  "ratingInput",
+  "buttonInput",
+];
+
 function Desktop() {
   const location = useLocation();
   const currentFormId = location.pathname.split("/").at(2);
@@ -75,7 +85,32 @@ function Desktop() {
       ),
     };
     setData(updatedData);
-    setIsDisabled({ ...isDisabled, [index]: true });
+
+    const updatedIsDisabled = { ...isDisabled, [index]: true };
+    setIsDisabled(updatedIsDisabled);
+
+    const inputItemIndexes = updatedData.itemList
+      .map((item, itemIndex) => ({ item, itemIndex }))
+      .filter(({ item }) => INPUT_TYPES.includes(item.type))
+      .map(({ itemIndex }) => itemIndex);
+
+    const allInputsAnswered = inputItemIndexes.every(
+      (itemIndex) => updatedIsDisabled[itemIndex]
+    );
+
+    if (allInputsAnswered) {
+      const answers = inputItemIndexes.map((itemIndex) => ({
+        itemId: updatedData.itemList[itemIndex].id,
+        type: updatedData.itemList[itemIndex].type,
+        value: String(inputValues[itemIndex] ?? ""),
+      }));
+
+      axios
+        .post(`${BACKEND_URL}/formdata/${currentFormId}/responses`, { answers })
+        .catch((error) => {
+          console.error("There was an error submitting the response!", error);
+        });
+    }
   };
 
   const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);

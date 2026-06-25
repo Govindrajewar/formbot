@@ -69,7 +69,70 @@ const loginUser = async (req, res) => {
   }
 };
 
+const updateUser = async (req, res) => {
+  try {
+    const { userName, email, oldPassword, newPassword } = req.body;
+
+    if (!userName || !email || !oldPassword || !newPassword) {
+      return res
+        .status(400)
+        .json({ status: "FAILED", message: "All fields are required" });
+    }
+
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res
+        .status(404)
+        .json({ status: "FAILED", message: "User not found" });
+    }
+
+    const isValidPassword = await bcrypt.compare(oldPassword, user.password);
+    if (!isValidPassword) {
+      return res
+        .status(400)
+        .json({ status: "FAILED", message: "Old password is incorrect" });
+    }
+
+    user.userName = userName;
+    user.email = email;
+    user.password = await bcrypt.hash(newPassword, 10);
+    await user.save();
+
+    const updatedUser = user.toObject();
+    delete updatedUser.password;
+
+    const jwToken = jwt.sign(
+      {
+        id: updatedUser._id,
+        email: updatedUser.email,
+        userName: updatedUser.userName,
+      },
+      process.env.jwtPrivateKey,
+      { expiresIn: 6000 }
+    );
+
+    res.status(200).json({
+      status: "SUCCESS",
+      message: "Profile updated successfully",
+      token: jwToken,
+      user: updatedUser,
+    });
+  } catch (error) {
+    if (error.code === 11000) {
+      return res.status(409).json({
+        status: "FAILED",
+        message: "That username or email is already in use",
+      });
+    }
+    res.status(400).json({
+      status: "ERROR",
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   signupUser,
   loginUser,
+  updateUser,
 };

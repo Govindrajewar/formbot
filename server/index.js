@@ -6,6 +6,8 @@ const helmet = require("helmet");
 const bodyParser = require("body-parser");
 const userRoutes = require("./src/routes/User.js");
 const formDataRoutes = require("./src/routes/FormData.js");
+const responseRoutes = require("./src/routes/Response.js");
+const folderRoutes = require("./src/routes/Folder.js");
 const port = process.env.PORT || 4000;
 
 const allowedOrigins = (process.env.CLIENT_URL || "http://localhost:3000")
@@ -19,6 +21,8 @@ app.use(bodyParser.json());
 app.use(express.json());
 app.use(userRoutes);
 app.use(formDataRoutes);
+app.use(responseRoutes);
+app.use(folderRoutes);
 
 app.get("/", (req, res) => {
   res.json({
