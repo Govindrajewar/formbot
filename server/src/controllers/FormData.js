@@ -7,6 +7,8 @@ const setFormData = async (req, res) => {
     const formData = new FormData({
       formName: req.body.formName,
       itemList: req.body.itemList,
+      folderId: req.body.folderId || null,
+      theme: req.body.theme || "light",
       userId: req.user.id,
     });
     await formData.save();
@@ -17,13 +19,55 @@ const setFormData = async (req, res) => {
   }
 };
 
+const updateFormData = async (req, res) => {
+  try {
+    const currentFormId = req.params.currentFormId;
+
+    if (!mongoose.Types.ObjectId.isValid(currentFormId)) {
+      return res.status(400).json({ status: "FAILED", message: "Invalid form ID" });
+    }
+
+    const form = await FormData.findOne({ _id: currentFormId });
+
+    if (!form) {
+      return res.status(404).json({ status: "FAILED", message: "Form not found" });
+    }
+
+    if (String(form.userId) !== req.user.id) {
+      return res
+        .status(403)
+        .json({ status: "FAILED", message: "You are not allowed to update this form" });
+    }
+
+    form.formName = req.body.formName;
+    form.itemList = req.body.itemList;
+    form.folderId = req.body.folderId || null;
+    form.theme = req.body.theme || "light";
+    await form.save();
+
+    res.status(200).json(form);
+  } catch (error) {
+    console.error("Error updating form data:", error);
+    res.status(400).json({ status: "ERROR", message: error.message });
+  }
+};
+
 const getFormData = async (req, res) => {
   try {
     const { page, limit, skip } = parsePagination(req.query);
 
+    const filter = { userId: req.user.id };
+
+    if (req.query.folderId) {
+      if (!mongoose.Types.ObjectId.isValid(req.query.folderId)) {
+        return res.status(400).json({ status: "FAILED", message: "Invalid folder ID" });
+      }
+      filter.folderId = req.query.folderId;
+    }
+
     const [data, total] = await Promise.all([
-      FormData.find({ userId: req.user.id }).sort({ _id: -1 }).skip(skip).limit(limit),
-      FormData.countDocuments({ userId: req.user.id }),
+      FormData.find(filter).sort({ _id: -1 }).skip(skip).limit(limit),
+      FormData.countDocuments(filter),
     ]);
 
     res.status(200).json(buildPaginatedResponse(data, total, page, limit));
@@ -79,6 +123,7 @@ const getCurrentFormData = async (req, res) => {
 
 module.exports = {
   setFormData,
+  updateFormData,
   getFormData,
   deleteFormData,
   getCurrentFormData,

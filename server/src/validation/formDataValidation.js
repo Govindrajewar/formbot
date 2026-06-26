@@ -27,6 +27,11 @@ const itemSchema = Joi.object({
 const setFormDataSchema = Joi.object({
   formName: Joi.string().trim().min(1).max(200).required(),
   itemList: Joi.array().items(itemSchema).min(1).max(100).required(),
+  folderId: Joi.string()
+    .pattern(/^[0-9a-fA-F]{24}$/)
+    .allow(null, "")
+    .optional(),
+  theme: Joi.string().valid("light", "dark", "blue").default("light"),
 });
 
 module.exports = {

@@ -3,6 +3,7 @@ const router = express.Router();
 
 const {
   setFormData,
+  updateFormData,
   getFormData,
   deleteFormData,
   getCurrentFormData,
@@ -12,6 +13,13 @@ const validate = require("../middleware/validate.js");
 const { setFormDataSchema } = require("../validation/formDataValidation.js");
 
 router.post("/dynamic-items", requireAuth, validate(setFormDataSchema), setFormData);
+
+router.patch(
+  "/formdata/:currentFormId",
+  requireAuth,
+  validate(setFormDataSchema),
+  updateFormData
+);
 
 router.get("/formdata", requireAuth, getFormData);
 

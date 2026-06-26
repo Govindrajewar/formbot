@@ -11,6 +11,8 @@ const itemSchema = new mongoose.Schema({
 const FormData = mongoose.model("FormData", {
   formName: String,
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", index: true },
+  folderId: { type: mongoose.Schema.Types.ObjectId, ref: "Folder", default: null, index: true },
+  theme: { type: String, enum: ["light", "dark", "blue"], default: "light" },
   itemList: [itemSchema],
 });
 
