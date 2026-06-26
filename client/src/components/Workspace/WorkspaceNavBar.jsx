@@ -24,11 +24,11 @@ function WorkspaceNavBar({
       alert("Enter Form Name");
       return;
     }
-    navigate(`/viewForm/${currentFormId}`);
+    navigate(`/form/${currentFormId}`);
   };
 
   const handleClose = () => {
-    navigate("/postlogin");
+    navigate("/dashboard");
   };
 
   return (

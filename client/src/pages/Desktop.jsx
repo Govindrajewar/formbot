@@ -3,8 +3,10 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import icon from "../../src/assets/Workspace/Theme/icon.png";
 import send from "../assets/Desktop/send.png";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { BACKEND_URL } from "../deploymentLink";
+import NavBar from "../components/HomePage/NavBar";
+import Footer from "../components/HomePage/Footer";
 
 const INPUT_TYPES = [
   "textInput",
@@ -32,7 +34,9 @@ const RUNTIME_INPUT_CONFIG = {
 
 function Desktop() {
   const location = useLocation();
+  const navigate = useNavigate();
   const currentFormId = location.pathname.split("/").at(2);
+  const createFormBot = () => navigate("/login");
   const [data, setData] = useState(null);
   const [inputValues, setInputValues] = useState({});
   const [errors, setErrors] = useState({});
@@ -129,8 +133,11 @@ function Desktop() {
   const validateDate = (date) => /^\d{4}-\d{2}-\d{2}$/.test(date);
   const validateRating = (rating) => rating >= 1 && rating <= 5;
 
+  const themeClass = data?.theme && data.theme !== "dark" ? `${data.theme}-theme` : "";
+
   return (
-    <div className="desktop">
+    <div className={`desktop ${themeClass}`}>
+      <NavBar createFormBot={createFormBot} />
       <div className="chat-container">
         {data ? (
           <>
@@ -230,6 +237,7 @@ function Desktop() {
           <p className="loading-message">Loading data...</p>
         )}
       </div>
+      <Footer />
     </div>
   );
 }

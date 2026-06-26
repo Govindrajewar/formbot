@@ -18,7 +18,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route
-            path="/postlogin"
+            path="/dashboard"
             element={
               <ProtectedRoute>
                 <PostLogin />
@@ -42,7 +42,7 @@ function App() {
             }
           />
           <Route path="/desktop" element={<Desktop />} />
-          <Route path="/viewForm/:formId" element={<Desktop />} />
+          <Route path="/form/:formId" element={<Desktop />} />
         </Routes>
       </BrowserRouter>
     </div>

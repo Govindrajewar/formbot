@@ -1,5 +1,5 @@
 .App {
   height: fit-content;
-  background-color: #171923;
-  color: white;
+  background-color: var(--bg);
+  color: var(--text);
 }

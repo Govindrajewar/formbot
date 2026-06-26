@@ -1,11 +1,19 @@
 .settings {
-  height: 100vh;
-  width: 100vw;
-  background-color: #171923;
+  min-height: 100vh;
+  background-color: var(--bg);
+  display: flex;
+  flex-direction: column;
+}
+
+.settings-main {
+  position: relative;
+  flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding: 80px 20px;
+  box-sizing: border-box;
 }
 
 .settings-h2 {
@@ -14,50 +22,77 @@
   font-size: 22px;
   line-height: 30px;
   font-weight: bold;
+  color: var(--text);
+}
+
+.settings-card {
+  width: 100%;
+  max-width: 550px;
 }
 
 .settings .data-container {
-  width: 550px;
+  width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  border: 1px solid #ccc;
-  border-radius: 12px;
-  color: #828282;
-  padding: 10px;
-  margin: 10px;
+  gap: 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-muted);
+  padding: 10px 16px;
+  margin: 10px 0;
+  box-sizing: border-box;
+  transition: border-color var(--transition);
+}
+
+.settings .data-container:focus-within {
+  border-color: var(--primary);
 }
 
 .settings input {
-  background-color: #171923;
-  color: #ffffff;
+  background-color: var(--bg);
+  color: var(--text);
   border: none;
-  padding: 10px;
-  font-size: 20px;
+  padding: 6px 0;
+  font-size: 18px;
   line-height: 24px;
-  margin: 0px 10px;
-  width: 500px;
+  width: 100%;
   outline: none;
 }
 
-.settings input:focus {
+.settings .view-toggle {
+  display: flex;
+  align-items: center;
+  background: none;
   border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0;
+  transition: color var(--transition);
 }
 
-.settings #viewId {
-  cursor: pointer;
+.settings .view-toggle:hover {
+  color: var(--primary);
 }
 
 .settings #update-btn {
-  width: 575px;
+  width: 100%;
   padding: 15px;
-  font-size: 20px;
-  background-color: #1a5fff;
-  color: #ffffff;
+  font-size: 18px;
+  font-weight: 600;
+  background-color: var(--primary);
+  color: var(--bg);
   border: none;
-  border-radius: 50px;
-  margin-top: 50px;
+  border-radius: 999px;
+  margin-top: 30px;
+  cursor: pointer;
+  transition: background-color var(--transition), transform var(--transition);
+}
+
+.settings #update-btn:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-1px);
 }
 
 .settings .logout-container {
@@ -67,18 +102,31 @@
 
   cursor: pointer;
   display: flex;
-  flex-direction: row;
+  align-items: center;
+  gap: 10px;
 }
 
 .settings .logout-container div {
   font-size: 18px;
   font-weight: 500;
-  margin-left: 10px;
-  color: #cf3636;
+  color: var(--error);
 }
 
 .settings-error {
-  color: red;
+  color: var(--error);
   text-align: start;
-  width: 550px;
+  width: 100%;
+  max-width: 550px;
+  font-size: 14px;
+}
+
+@media (max-width: 480px) {
+  .settings {
+    padding: 80px 16px 80px;
+  }
+
+  .settings .logout-container {
+    left: 20px;
+    bottom: 20px;
+  }
 }

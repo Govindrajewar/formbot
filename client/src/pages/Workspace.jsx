@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 import "../style/Workspace/Workspace.css";
 import WorkspaceNavBar from "../components/Workspace/WorkspaceNavBar.jsx";
 import Flow from "../components/Workspace/Flow.jsx";
@@ -7,6 +8,8 @@ import Response from "../components/Workspace/Response.jsx";
 import axiosInstance from "../api/axiosInstance";
 
 function Workspace() {
+  const location = useLocation();
+  const folderId = location.state?.folderId || null;
   const [activeComponent, setActiveComponent] = useState("Flow");
   const [formName, setFormName] = useState("");
   const [dynamicItems, setDynamicItems] = useState([]);
@@ -25,6 +28,7 @@ function Workspace() {
   });
   const [currentFormId, setCurrentFormId] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  const [theme, setTheme] = useState("light");
 
   const handleSave = async () => {
     if (isSaving) return;
@@ -42,12 +46,16 @@ function Workspace() {
     const dataToSave = {
       formName,
       itemList: dynamicItems,
+      folderId,
+      theme,
     };
 
     setIsSaving(true);
 
     try {
-      const response = await axiosInstance.post(`/dynamic-items`, dataToSave);
+      const response = currentFormId
+        ? await axiosInstance.patch(`/formdata/${currentFormId}`, dataToSave)
+        : await axiosInstance.post(`/dynamic-items`, dataToSave);
       setCurrentFormId(response.data._id);
       alert("Form Saved Successfully");
     } catch (error) {
@@ -76,7 +84,9 @@ function Workspace() {
           setItemCounts={setItemCounts}
         />
       )}
-      {activeComponent === "Theme" && <Theme />}
+      {activeComponent === "Theme" && (
+        <Theme theme={theme} setTheme={setTheme} />
+      )}
       {activeComponent === "Response" && (
         <Response currentFormId={currentFormId} />
       )}

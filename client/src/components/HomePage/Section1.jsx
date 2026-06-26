@@ -1,10 +1,14 @@
 import "../../style/HomePage/Section1.css";
-import triangleImg from "../../assets/triangle.png";
-import halfcircleImg from "../../assets/halfcircle.png";
+import useInView from "../../hooks/useInView";
 
 function Section1({ createFormBot }) {
+  const [ref, isInView] = useInView();
+
   return (
-    <div className="section1">
+    <div className={`section1 reveal ${isInView ? "is-visible" : ""}`} ref={ref}>
+      <div className="shape-triangle" aria-hidden="true"></div>
+      <div className="shape-halfcircle" aria-hidden="true"></div>
+
       <div className="section1-header">Build advanced chatbots visually</div>
       <div className="section1-description">
         Typebot gives you powerful blocks to create unique chat experiences.
@@ -13,11 +17,9 @@ function Section1({ createFormBot }) {
       </div>
       <div>
         <button className="create-formBit-btn" onClick={createFormBot}>
-          Create a FormBot for free
+          Create a Form for free
         </button>
       </div>
-      <img className="triangle-img" src={triangleImg} alt="triangle" />
-      <img className="halfcircle-img" src={halfcircleImg} alt="halfcircle" />
     </div>
   );
 }

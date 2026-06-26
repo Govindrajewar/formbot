@@ -1,23 +1,19 @@
 import { useState, useEffect } from "react";
 import axiosInstance from "../api/axiosInstance";
 import "../style/PostLogin/PostLogin.css";
-import addFolder from "../assets/PostLogin/addFolder.png";
-import drop from "../assets/PostLogin/drop.png";
-import deleteIcon from "../assets/PostLogin/delete.png";
-import upArrow from "../assets/PostLogin/upArrow.png";
+import { FolderPlus, Trash2, Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import NavBar from "../components/HomePage/NavBar";
+import Footer from "../components/HomePage/Footer";
 
 function PostLogin() {
-  // eslint-disable-next-line
-  const [userName, setUsername] = useState(
-    localStorage.getItem("formBotCurrentUser")
-  );
-  const [isListVisible, setIsListVisible] = useState(false);
+  const [userName] = useState(localStorage.getItem("formBotCurrentUser"));
   const [isCreateFolder, setIsCreateFolder] = useState(false);
   const [newFolderName, setNewFolderName] = useState("");
   const [folders, setFolders] = useState([]);
   const [isDeleteFolder, setIsDeleteFolder] = useState(false);
   const [deleteIndexFolder, setDeleteIndexFolder] = useState(0);
+  const [selectedFolderId, setSelectedFolderId] = useState(null);
   const [forms, setForms] = useState([]);
   const [formsPage, setFormsPage] = useState(1);
   const [hasMoreForms, setHasMoreForms] = useState(false);
@@ -25,9 +21,12 @@ function PostLogin() {
 
   const navigate = useNavigate();
 
-  const loadForms = (page) => {
+  const loadForms = (page, folderId) => {
+    setIsLoadingForms(true);
+    const folderQuery = folderId ? `&folderId=${folderId}` : "";
+
     axiosInstance
-      .get(`/formdata?page=${page}`)
+      .get(`/formdata?page=${page}${folderQuery}`)
       .then((response) => {
         const userForms = response.data.data.map((item) => ({
           formName: item.formName,
@@ -46,12 +45,12 @@ function PostLogin() {
   };
 
   useEffect(() => {
-    loadForms(1);
+    loadForms(1, selectedFolderId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [selectedFolderId]);
 
   const handleLoadMoreForms = () => {
-    loadForms(formsPage + 1);
+    loadForms(formsPage + 1, selectedFolderId);
   };
 
   useEffect(() => {
@@ -66,17 +65,7 @@ function PostLogin() {
   }, []);
 
   const goToForm = (formId) => {
-    navigate(`/viewForm/${formId}`);
-  };
-
-  const handleSettings = () => {
-    navigate("/settings");
-  };
-
-  const handleLogout = () => {
-    navigate("/");
-    localStorage.removeItem("formBotCurrentUser");
-    localStorage.removeItem("formBotToken");
+    navigate(`/form/${formId}`);
   };
 
   const handleCreateFolder = () => {
@@ -106,6 +95,9 @@ function PostLogin() {
       .delete(`/folders/${folderToDelete._id}`)
       .then(() => {
         setFolders(folders.filter((_, i) => i !== deleteIndexFolder));
+        if (selectedFolderId === folderToDelete._id) {
+          setSelectedFolderId(null);
+        }
       })
       .catch((error) => {
         console.error("There was an error deleting the folder!", error);
@@ -127,14 +119,8 @@ function PostLogin() {
     }
   };
 
-  const hideList = () => {
-    if (isListVisible) {
-      setIsListVisible(!isListVisible);
-    }
-  };
-
   const createTypeBot = () => {
-    navigate("/Workspace");
+    navigate("/Workspace", { state: { folderId: selectedFolderId } });
   };
 
   // TODO: Modify the delete functionality in backend
@@ -152,70 +138,55 @@ function PostLogin() {
   };
 
   return (
-    <div className="PostLogin" onClick={hideList}>
-      <header className="workspace-header">
-        {isListVisible ? (
-          <>
+    <div className="PostLogin">
+      <NavBar
+        centerText={userName ? `${userName}'s workspace` : "Your workspace"}
+      />
+
+      <div className="dashboard-main">
+        <div className="workspace-content">
+          <div className="workspace-folder-content">
             <div
-              className="header-h1"
-              onClick={() => setIsListVisible(!isListVisible)}
+              className="folder-button"
+              onClick={() => setIsCreateFolder(!isCreateFolder)}
             >
-              {userName ? `${userName}'s workspace` : "Your workspace"}
-              <img src={upArrow} alt="Up arrow" />
+              <FolderPlus size={16} />
+              Create a folder
             </div>
-            <div className="header-settings" onClick={handleSettings}>
-              Settings
-            </div>
-            <div className="header-logOut" onClick={handleLogout}>
-              Log Out
-            </div>
-          </>
-        ) : (
-          <>
-            <div
-              className="header-h1"
-              onClick={() => setIsListVisible(!isListVisible)}
-            >
-              {userName ? `${userName}'s workspace` : "Your workspace"}
-              <img src={drop} alt="drop arrow" />
-            </div>
-          </>
-        )}
-      </header>
-      <div className="workspace-content">
-        <div className="workspace-folder-content">
-          <div
-            className="folder-button"
-            onClick={() => setIsCreateFolder(!isCreateFolder)}
-          >
-            <img src={addFolder} alt="Add Folder" />
-            Create a folder
-          </div>
-          <div className="tabs">
-            {folders.map((folder, index) => (
-              <div className="tab" key={folder._id}>
-                {folder.name}
-                <span
-                  className="delete-icon"
-                  onClick={() => deleteFolder(index)}
-                >
-                  <img src={deleteIcon} alt="delete Icon" />
-                </span>
+            <div className="tabs">
+              <div
+                className={`tab ${selectedFolderId === null ? "tab-selected" : ""}`}
+                onClick={() => setSelectedFolderId(null)}
+              >
+                All forms
               </div>
-            ))}
+              {folders.map((folder, index) => (
+                <div
+                  className={`tab ${selectedFolderId === folder._id ? "tab-selected" : ""}`}
+                  key={folder._id}
+                  onClick={() => setSelectedFolderId(folder._id)}
+                >
+                  {folder.name}
+                  <span
+                    className="delete-icon"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      deleteFolder(index);
+                    }}
+                  >
+                    <Trash2 size={16} />
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-        <div className="create-typebot">
-          <div className="typebot-button" onClick={createTypeBot}>
-            <br />
-            <br />
-            <span className="plus-sign">+</span>
-            <br />
-            <br />
-            <br />
-            Create a TypeBot
-          </div>
-          <div className="form-names">
+
+          <div className="create-typebot">
+            <div className="typebot-button" onClick={createTypeBot}>
+              <Plus className="plus-sign" size={40} />
+              Create a TypeBot
+            </div>
+
             {isLoadingForms ? (
               <div className="forms-status-message">Loading your forms...</div>
             ) : forms.length === 0 ? (
@@ -223,75 +194,76 @@ function PostLogin() {
                 No forms yet - create one to get started.
               </div>
             ) : (
-              <div className="form-list">
-                {forms.map(({ formName, formId }, index) => (
-                  <>
-                    <div
-                      className="form-list-item"
-                      key={index}
-                      onClick={() => goToForm(formId)}
-                    >
-                      <span>{formName}</span>
-                    </div>
+              forms.map(({ formName, formId }, index) => (
+                <div className="form-list-card" key={index}>
+                  <div
+                    className="form-list-item"
+                    onClick={() => goToForm(formId)}
+                  >
+                    <span>{formName}</span>
+                  </div>
 
-                    <img
-                      src={deleteIcon}
-                      alt="delete Icon"
-                      className="delete-form-icon"
-                      onClick={() => handleDeleteForm(formId)}
-                    />
-                  </>
-                ))}
-              </div>
-            )}
-            {hasMoreForms && (
-              <div className="load-more-forms" onClick={handleLoadMoreForms}>
-                Load more
-              </div>
+                  <button
+                    className="delete-form-icon"
+                    aria-label="Delete form"
+                    onClick={() => handleDeleteForm(formId)}
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                </div>
+              ))
             )}
           </div>
+
+          {hasMoreForms && (
+            <div className="load-more-forms" onClick={handleLoadMoreForms}>
+              Load more
+            </div>
+          )}
         </div>
+
+        {isCreateFolder && (
+          <div className="createNewFolder">
+            <label htmlFor="createFolderId">Create New Folder</label>
+            <input
+              type="text"
+              id="createFolderId"
+              placeholder="Enter folder name"
+              value={newFolderName}
+              onChange={(e) => setNewFolderName(e.target.value)}
+            />
+            <div className="createNewFolder-buttons">
+              <div className="done-button" onClick={handleCreateFolder}>
+                Done
+              </div>
+              <div className="center-line">|</div>
+              <div className="cancel-button" onClick={cancelButton}>
+                Cancel
+              </div>
+            </div>
+          </div>
+        )}
+
+        {isDeleteFolder && (
+          <div className="DeleteNewFolder">
+            <div id="DeleteFolderId">
+              Are you sure you want to delete this folder ?
+            </div>
+
+            <div className="DeleteNewFolder-buttons">
+              <div className="confirm-button" onClick={handleDeleteFolder}>
+                Confirm
+              </div>
+              <div className="center-line">|</div>
+              <div className="cancel-button" onClick={cancelButton}>
+                Cancel
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
-      {isCreateFolder && (
-        <div className="createNewFolder">
-          <label htmlFor="createFolderId">Create New Folder</label>
-          <input
-            type="text"
-            id="createFolderId"
-            placeholder="Enter folder name"
-            value={newFolderName}
-            onChange={(e) => setNewFolderName(e.target.value)}
-          />
-          <div className="createNewFolder-buttons">
-            <div className="done-button" onClick={handleCreateFolder}>
-              Done
-            </div>
-            <div className="center-line">|</div>
-            <div className="cancel-button" onClick={cancelButton}>
-              Cancel
-            </div>
-          </div>
-        </div>
-      )}
-
-      {isDeleteFolder && (
-        <div className="DeleteNewFolder">
-          <div id="DeleteFolderId">
-            Are you sure you want to delete this folder ?
-          </div>
-
-          <div className="DeleteNewFolder-buttons">
-            <div className="confirm-button" onClick={handleDeleteFolder}>
-              Confirm
-            </div>
-            <div className="center-line">|</div>
-            <div className="cancel-button" onClick={cancelButton}>
-              Cancel
-            </div>
-          </div>
-        </div>
-      )}
+      <Footer />
     </div>
   );
 }

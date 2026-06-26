@@ -1,13 +1,19 @@
 import "../../style/HomePage/Section4.css";
-import upperImg from "../../assets/HomePage/Section4/upper-image.png";
-import lowerImg from "../../assets/HomePage/Section4/lower-image.png";
+import { Layers, Code2 } from "lucide-react";
+import useInView from "../../hooks/useInView";
 
 function Section4() {
+  const [upperRef, upperInView] = useInView();
+  const [lowerRef, lowerInView] = useInView();
+
   return (
     <div className="section4">
-      <div className="section4-upper">
-        <div>
-          <img src={upperImg} alt="bubbles" />
+      <div
+        className={`section4-upper reveal ${upperInView ? "is-visible" : ""}`}
+        ref={upperRef}
+      >
+        <div className="visual-panel">
+          <Layers size={64} />
         </div>
         <div className="section4-upper-sidebar">
           <div className="section4-header">Easy building experience</div>
@@ -17,7 +23,10 @@ function Section4() {
           </div>
         </div>
       </div>
-      <div className="section4-lower">
+      <div
+        className={`section4-lower reveal ${lowerInView ? "is-visible" : ""}`}
+        ref={lowerRef}
+      >
         <div className="section4-lower-sidebar">
           <div className="section4-header">Embed it in a click</div>
           <div className="section4-description">
@@ -26,8 +35,8 @@ function Section4() {
             instructions. Your typebot will always feel "native".
           </div>
         </div>
-        <div>
-          <img src={lowerImg} alt="Quick" />
+        <div className="visual-panel">
+          <Code2 size={64} />
         </div>
       </div>
     </div>

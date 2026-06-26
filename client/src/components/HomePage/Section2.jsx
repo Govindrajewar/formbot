@@ -1,17 +1,30 @@
 import "../../style/HomePage/Section2.css";
-import leftBG from "../../assets/left-bg.png";
-import rightBG from "../../assets/right-bg.png";
-import flowChart from "../../assets/flowchart.png";
+import { MessageSquare, GitBranch, CheckCircle2 } from "lucide-react";
+import useInView from "../../hooks/useInView";
 
 function Section2() {
+  const [ref, isInView] = useInView();
+
   return (
-    <div className="section2">
-      <div className="section2-background">
-        <img src={leftBG} alt="left background" className="left" />
-        <img src={rightBG} alt="right background" className="right" />
-      </div>
-      <div>
-        <img src={flowChart} alt="flowchart" className="flowchart" />
+    <div className={`section2 reveal ${isInView ? "is-visible" : ""}`} ref={ref}>
+      <div className="section2-glow left" aria-hidden="true"></div>
+      <div className="section2-glow right" aria-hidden="true"></div>
+
+      <div className="builder-preview">
+        <div className="builder-step">
+          <MessageSquare size={28} />
+          <span>Question</span>
+        </div>
+        <div className="builder-connector"></div>
+        <div className="builder-step">
+          <GitBranch size={28} />
+          <span>Logic</span>
+        </div>
+        <div className="builder-connector"></div>
+        <div className="builder-step">
+          <CheckCircle2 size={28} />
+          <span>Answer</span>
+        </div>
       </div>
     </div>
   );

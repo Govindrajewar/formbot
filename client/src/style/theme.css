@@ -1,0 +1,81 @@
+:root {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface-2: #1f2630;
+  --primary: #2dd4bf;
+  --primary-hover: #14b8a6;
+  --accent: #60a5fa;
+  --text: #f0f3f7;
+  --text-muted: #8b96a5;
+  --border: #2a313c;
+  --success: #4ade80;
+  --error: #f87171;
+
+  --radius: 8px;
+  --transition: 0.18s ease;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.brand-logo {
+  height: 35px;
+  width: 35px;
+  flex-shrink: 0;
+  border-radius: 5px;
+  background-color: var(--primary);
+  color: var(--bg);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.brand-logo .upper,
+.brand-logo .lower {
+  display: flex;
+  margin: 0.5px;
+}
+
+.brand-logo .circleUpper {
+  height: 4px;
+  width: 4px;
+  border-radius: 50%;
+  background-color: var(--bg);
+  margin: 1px;
+}
+
+.brand-logo .rectangleUpper {
+  height: 4px;
+  width: 16px;
+  border-radius: 1px;
+  background-color: var(--bg);
+  margin: 1px;
+}
+
+.brand-logo .circleLower {
+  height: 4px;
+  width: 4px;
+  border-radius: 50%;
+  background-color: var(--bg);
+  margin: 1px;
+  opacity: 0.6;
+}
+
+.brand-logo .rectangleLower {
+  height: 4px;
+  width: 16px;
+  border-radius: 1px;
+  margin: 1px;
+  background-color: var(--bg);
+  opacity: 0.6;
+}
+

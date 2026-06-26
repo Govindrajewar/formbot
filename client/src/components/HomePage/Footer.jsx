@@ -1,87 +1,54 @@
 import "../../style/HomePage/Footer.css";
-import linkImg from "../../assets/HomePage/Footer/link.png";
+import { GithubIcon, XIcon, LinkedinIcon } from "./BrandIcons";
 
 function Footer() {
+  const year = new Date().getFullYear();
+
   return (
-    <div className="footer">
-      <div className="footer-container-developer">
-        Made with ❤️ by <br />
-        <a
-          href="https://govindrajewar.github.io/Portfolio/"
-          className="developer-name"
-          target="_blank"
-          rel="noreferrer"
-        >
-          @ Govind Rajewar
-        </a>
-      </div>
-      <div className="footer-container">
-        <a href="#Status" id="Status">
-          Status &nbsp;
-          <img src={linkImg} alt="link" />
-        </a>
+    <footer className="footer-bottom">
+      <span className="footer-copyright">
+        © {year} FormBot. All rights reserved.
+      </span>
 
-        <a href="#Documentation" id="Documentation">
-          Documentation &nbsp;
-          <img src={linkImg} alt="link" />
-        </a>
-
-        <a href="#Roadmap" id="Roadmap">
-          Roadmap &nbsp;
-          <img src={linkImg} alt="link" />
-        </a>
-
-        <a href="#Pricing" id="Pricing">
-          Pricing
-        </a>
-      </div>
-      <div className="footer-container">
-        <a href="#Discord" id="Discord">
-          Discord &nbsp;
-          <img src={linkImg} alt="link" />
-        </a>
+      <div className="footer-social">
         <a
           href="https://github.com/Govindrajewar"
           target="_blank"
           rel="noreferrer"
+          aria-label="GitHub"
         >
-          GitHub &nbsp;
-          <img src={linkImg} alt="link" />
+          <GithubIcon size={20} />
         </a>
         <a
           href="https://x.com/who_abhirajewar"
           target="_blank"
           rel="noreferrer"
+          aria-label="Twitter"
         >
-          Twitter &nbsp;
-          <img src={linkImg} alt="link" />
+          <XIcon size={20} />
         </a>
         <a
           href="https://www.linkedin.com/in/govind-rajewar/"
           target="_blank"
           rel="noreferrer"
+          aria-label="LinkedIn"
         >
-          LinkedIn &nbsp;
-          <img src={linkImg} alt="link" />
+          <LinkedinIcon size={20} />
         </a>
       </div>
-      <div className="footer-container">
-        <a href="#About" id="About">
-          About
-        </a>
-        <a href="#Contact" id="Contact">
-          Contact
-        </a>
 
-        <a href="#TermsOfService" id="TermsOfService">
-          Terms of Service
+      <span className="footer-credit">
+        Made with ❤️ by{" "}
+        <a
+          href="https://govindrajewar.github.io/Govind-Rajewar/"
+          className="developer-name"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Govind Rajewar
         </a>
-
-        <a href="#PrivacyPolicy" id="PrivacyPolicy">
-          Privacy Policy
-        </a>
-      </div>
-    </div>
+      </span>
+    </footer>
   );
 }
 

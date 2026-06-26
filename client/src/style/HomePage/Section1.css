@@ -1,50 +1,97 @@
 .section1 {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   padding: 100px 10px 20px;
+  overflow: hidden;
 }
 
 .section1-header {
-  font-size: 72px;
-  width: 850px;
+  font-size: clamp(32px, 6vw, 72px);
+  width: 100%;
+  max-width: 850px;
   font-weight: bold;
-  background: linear-gradient(to right, #215ce3, #4b83ff, #b794f4);
+  background: linear-gradient(to right, var(--primary), var(--accent), #b794f4);
   -webkit-text-fill-color: transparent;
   -webkit-background-clip: text;
 }
 
 .section1-description {
-  font-size: 20px;
+  font-size: clamp(16px, 2.2vw, 20px);
   margin-top: 10px;
-  width: 800px;
-  color: #ffffffeb;
+  width: 100%;
+  max-width: 800px;
+  padding: 0 20px;
+  color: var(--text);
 }
 
 .create-formBit-btn {
   font-size: 18px;
   margin-top: 30px;
   padding: 20px 50px;
-  background-color: #0042da;
-  color: white;
-  border: 2px solid #0042da;
-  border-radius: 6px;
+  background-color: var(--primary);
+  color: var(--bg);
+  border: 2px solid var(--primary);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background-color var(--transition), transform var(--transition);
 }
 
 .create-formBit-btn:hover {
-  background-color: #0031b8;
-  color: white;
+  background-color: var(--primary-hover);
+  border-color: var(--primary-hover);
+  transform: translateY(-2px);
 }
 
-.triangle-img {
+.shape-triangle {
   position: absolute;
+  top: -40px;
+  left: -40px;
+  width: 250px;
   height: 250px;
-  left: 0px;
+  background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  opacity: 0.25;
+  filter: blur(2px);
+  pointer-events: none;
 }
 
-.halfcircle-img {
+.shape-halfcircle {
   position: absolute;
+  top: -60px;
+  right: -60px;
+  width: 250px;
   height: 250px;
-  right: 0px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
+  opacity: 0.3;
+  filter: blur(2px);
+  pointer-events: none;
+}
+
+@media (max-width: 768px) {
+  .section1 {
+    padding: 60px 10px 20px;
+  }
+
+  .shape-triangle,
+  .shape-halfcircle {
+    width: 160px;
+    height: 160px;
+  }
+}
+
+@media (max-width: 480px) {
+  .create-formBit-btn {
+    padding: 16px 30px;
+    font-size: 16px;
+  }
+
+  .shape-triangle,
+  .shape-halfcircle {
+    width: 110px;
+    height: 110px;
+  }
 }

@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
 import "../style/Settings/Settings.css";
-import lock from "../assets/Settings/lock.png";
-import logout from "../assets/Settings/logout.png";
-import profile from "../assets/Settings/profile.png";
-import view from "../assets/Settings/view.png";
+import { Lock, LogOut, User, Eye, EyeOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../api/axiosInstance";
+import NavBar from "../components/HomePage/NavBar";
+import Footer from "../components/HomePage/Footer";
 import {
   isValidEmail,
   isValidPassword,
@@ -109,76 +108,88 @@ function Settings() {
 
   return (
     <div className="settings">
-      <div className="settings-h2">Settings</div>
-      <div className="data-container">
-        <img src={profile} alt="profile" />
-        <input
-          type="text"
-          placeholder="Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-      </div>
-      {errorMessages.name && (
-        <div className="settings-error">{errorMessages.name}</div>
-      )}
-      <div className="data-container">
-        <img src={lock} alt="lock" />
-        <input
-          type="email"
-          placeholder="Update Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-      </div>
-      {errorMessages.email && (
-        <div className="settings-error">{errorMessages.email}</div>
-      )}
-      <div className="data-container">
-        <img src={lock} alt="lock" />
-        <input
-          type={showOldPassword ? "text" : "password"}
-          placeholder="Old Password"
-          value={oldPassword}
-          onChange={(e) => setOldPassword(e.target.value)}
-        />
-        <img
-          src={view}
-          alt="view"
-          id="viewId"
-          onClick={() => setShowOldPassword(!showOldPassword)}
-        />
-      </div>
-      {errorMessages.oldPassword && (
-        <div className="settings-error">{errorMessages.oldPassword}</div>
-      )}
-      <div className="data-container">
-        <img src={lock} alt="lock" />
-        <input
-          type={showNewPassword ? "text" : "password"}
-          placeholder="New Password"
-          value={newPassword}
-          onChange={(e) => setNewPassword(e.target.value)}
-        />
-        <img
-          src={view}
-          alt="view"
-          id="viewId"
-          onClick={() => setShowNewPassword(!showNewPassword)}
-        />
-      </div>
-      {errorMessages.newPassword && (
-        <div className="settings-error">{errorMessages.newPassword}</div>
-      )}
+      <NavBar />
 
-      <button type="button" id="update-btn" onClick={handleUpdate} disabled={isUpdating}>
-        {isUpdating ? "Updating..." : "Update"}
-      </button>
+      <div className="settings-main">
+        <div className="settings-h2">Settings</div>
+        <div className="settings-card">
+          <div className="data-container">
+            <User size={20} />
+            <input
+              type="text"
+              placeholder="Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
+          {errorMessages.name && (
+            <div className="settings-error">{errorMessages.name}</div>
+          )}
+          <div className="data-container">
+            <Lock size={20} />
+            <input
+              type="email"
+              placeholder="Update Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+          {errorMessages.email && (
+            <div className="settings-error">{errorMessages.email}</div>
+          )}
+          <div className="data-container">
+            <Lock size={20} />
+            <input
+              type={showOldPassword ? "text" : "password"}
+              placeholder="Old Password"
+              value={oldPassword}
+              onChange={(e) => setOldPassword(e.target.value)}
+            />
+            <button
+              type="button"
+              className="view-toggle"
+              onClick={() => setShowOldPassword(!showOldPassword)}
+              aria-label="Toggle old password visibility"
+            >
+              {showOldPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
+          </div>
+          {errorMessages.oldPassword && (
+            <div className="settings-error">{errorMessages.oldPassword}</div>
+          )}
+          <div className="data-container">
+            <Lock size={20} />
+            <input
+              type={showNewPassword ? "text" : "password"}
+              placeholder="New Password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+            />
+            <button
+              type="button"
+              className="view-toggle"
+              onClick={() => setShowNewPassword(!showNewPassword)}
+              aria-label="Toggle new password visibility"
+            >
+              {showNewPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
+          </div>
+          {errorMessages.newPassword && (
+            <div className="settings-error">{errorMessages.newPassword}</div>
+          )}
 
-      <div className="logout-container" onClick={handleLogout}>
-        <img src={logout} alt="logout" />
-        <div>Log out</div>
+          <button type="button" id="update-btn" onClick={handleUpdate} disabled={isUpdating}>
+            {isUpdating ? "Updating..." : "Update"}
+          </button>
+        </div>
+
+        <div className="logout-container" onClick={handleLogout}>
+          <LogOut size={18} />
+          <div>Log out</div>
+        </div>
       </div>
+
+      <Footer />
     </div>
   );
 }

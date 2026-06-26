@@ -2,16 +2,11 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Login } from "../api/User.js";
 import "../style/Login/Login.css";
-import arrowBack from "../assets/Login/arrowBack.png";
-import bottomEllipse from "../assets/Login/bottomEllipse.png";
-import sideEllipse from "../assets/Login/sideEllipse.png";
-import polygon from "../assets/Login/polygon.png";
+import NavBar from "../components/HomePage/NavBar";
+import Footer from "../components/HomePage/Footer";
 
 function LoginPage() {
   const navigate = useNavigate();
-  const handleArrowBack = () => {
-    navigate("/");
-  };
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -54,7 +49,7 @@ function LoginPage() {
       alert("Login successful");
       localStorage.setItem("formBotCurrentUser", userName);
       localStorage.setItem("formBotToken", response.data.token);
-      navigate("/postlogin");
+      navigate("/dashboard");
     } catch (error) {
       setLoginError(error.response?.data?.message || "Login failed");
     } finally {
@@ -64,57 +59,56 @@ function LoginPage() {
 
   return (
     <div className="login">
-      <div className="login-form">
-        <label htmlFor="email" className={emailError ? "labelError" : ""}>
-          Email
-        </label>
-        <br />
-        <input
-          type="email"
-          name="email"
-          placeholder="Enter your email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className={emailError ? "error" : "login-email"}
-        />
-        {emailError && <div className="errorMessage">{emailError}</div>}
-        <br />
-        <label htmlFor="password" className={passwordError ? "labelError" : ""}>
-          Password
-        </label>
-        <br />
-        <input
-          type="password"
-          name="password"
-          placeholder="**********"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className={passwordError ? "error" : "login-password"}
-        />
-        {passwordError && <div className="errorMessage">{passwordError}</div>}
-        {loginError && <div className="errorMessage">{loginError}</div>}
-        <br />
-        <div
-          className="login-btn"
-          onClick={handleLogin}
-          style={isLoggingIn ? { opacity: 0.6, pointerEvents: "none" } : undefined}
-        >
-          {isLoggingIn ? "Logging in..." : "Log in"}
-        </div>
-        <div className="login-text">
-          Don’t have an account? <a href="/signup">Register now</a>
+      <NavBar variant="login" />
+
+      <div className="login-main">
+        <div className="login-glow top" aria-hidden="true"></div>
+        <div className="login-glow bottom" aria-hidden="true"></div>
+
+        <div className="login-form">
+          <label htmlFor="email" className={emailError ? "labelError" : ""}>
+            Email
+          </label>
+          <br />
+          <input
+            type="email"
+            name="email"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className={emailError ? "error" : "login-email"}
+          />
+          {emailError && <div className="errorMessage">{emailError}</div>}
+          <br />
+          <label htmlFor="password" className={passwordError ? "labelError" : ""}>
+            Password
+          </label>
+          <br />
+          <input
+            type="password"
+            name="password"
+            placeholder="**********"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className={passwordError ? "error" : "login-password"}
+          />
+          {passwordError && <div className="errorMessage">{passwordError}</div>}
+          {loginError && <div className="errorMessage">{loginError}</div>}
+          <br />
+          <div
+            className="login-btn"
+            onClick={handleLogin}
+            style={isLoggingIn ? { opacity: 0.6, pointerEvents: "none" } : undefined}
+          >
+            {isLoggingIn ? "Logging in..." : "Log in"}
+          </div>
+          <div className="login-text">
+            Don't have an account? <a href="/signup">Register now</a>
+          </div>
         </div>
       </div>
 
-      <img
-        id="arrowBack"
-        src={arrowBack}
-        alt="Arrow Back"
-        onClick={handleArrowBack}
-      />
-      <img id="bottomEllipse" src={bottomEllipse} alt="Bottom Ellipse" />
-      <img id="sideEllipse" src={sideEllipse} alt="Side Ellipse" />
-      <img id="polygon" src={polygon} alt="Polygon" />
+      <Footer />
     </div>
   );
 }

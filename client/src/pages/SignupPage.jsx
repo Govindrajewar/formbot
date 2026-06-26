@@ -1,12 +1,9 @@
 import "../style/Signup/Signup.css";
-import arrowBack from "../assets/Signup/arrowBack.png";
-import bottomEllipse from "../assets/Signup/bottomEllipse.png";
-import sideEllipse from "../assets/Signup/sideEllipse.png";
-import polygon from "../assets/Signup/polygon.png";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-// connect to server to Register User
 import { Register } from "../api/User.js";
+import NavBar from "../components/HomePage/NavBar";
+import Footer from "../components/HomePage/Footer";
 import {
   isValidEmail,
   isValidPassword,
@@ -15,9 +12,6 @@ import {
 
 function SignupPage() {
   const navigate = useNavigate();
-  const handleArrowBack = () => {
-    navigate("/");
-  };
 
   const [userName, setUserName] = useState();
   const [email, setEmail] = useState();
@@ -94,95 +88,94 @@ function SignupPage() {
 
   return (
     <div className="signup">
-      <div className="signup-form">
-        <label htmlFor="userName" className={usernameError ? "labelError" : ""}>
-          Username
-        </label>
-        <br />
-        <input
-          type="text"
-          name="userName"
-          placeholder="Enter a userName"
-          value={userName}
-          onChange={(e) => setUserName(e.target.value)}
-          className={usernameError ? "error" : "signup-username"}
-        />
-        <br />
-        {usernameError && <div className="errorMessage">{usernameError}</div>}
+      <NavBar variant="signup" />
 
-        <label htmlFor="email" className={emailError ? "labelError" : ""}>
-          Email
-        </label>
-        <br />
-        <input
-          type="email"
-          name="email"
-          placeholder="Enter your email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className={emailError ? "error" : "signup-email"}
-        />
-        <br />
-        {emailError && <div className="errorMessage">{emailError}</div>}
+      <div className="signup-main">
+        <div className="signup-glow top" aria-hidden="true"></div>
+        <div className="signup-glow bottom" aria-hidden="true"></div>
 
-        <label htmlFor="password" className={passwordError ? "labelError" : ""}>
-          Password
-        </label>
-        <br />
-        <input
-          type="password"
-          name="password"
-          placeholder="**********"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className={passwordError ? "error" : "signup-password"}
-        />
-        <br />
-        {passwordError && <div className="errorMessage">{passwordError}</div>}
+        <div className="signup-form">
+          <label htmlFor="userName" className={usernameError ? "labelError" : ""}>
+            Username
+          </label>
+          <br />
+          <input
+            type="text"
+            name="userName"
+            placeholder="Enter a userName"
+            value={userName}
+            onChange={(e) => setUserName(e.target.value)}
+            className={usernameError ? "error" : "signup-username"}
+          />
+          <br />
+          {usernameError && <div className="errorMessage">{usernameError}</div>}
 
-        <label
-          htmlFor="confirmPassword"
-          className={confirmPasswordError ? "labelError" : ""}
-        >
-          Confirm Password
-        </label>
-        <br />
-        <input
-          type="password"
-          name="confirmPassword"
-          placeholder="**********"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          className={confirmPasswordError ? "error" : "signup-confirmpassword"}
-        />
-        <br />
-        {confirmPasswordError && (
-          <div className="errorMessage">{confirmPasswordError}</div>
-        )}
-        {signupError && <div className="errorMessage">{signupError}</div>}
+          <label htmlFor="email" className={emailError ? "labelError" : ""}>
+            Email
+          </label>
+          <br />
+          <input
+            type="email"
+            name="email"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className={emailError ? "error" : "signup-email"}
+          />
+          <br />
+          {emailError && <div className="errorMessage">{emailError}</div>}
 
-        <div
-          className="signup-btn"
-          onClick={handleSignup}
-          style={isSigningUp ? { opacity: 0.6, pointerEvents: "none" } : undefined}
-        >
-          {isSigningUp ? "Signing up..." : "Sign Up"}
-        </div>
+          <label htmlFor="password" className={passwordError ? "labelError" : ""}>
+            Password
+          </label>
+          <br />
+          <input
+            type="password"
+            name="password"
+            placeholder="**********"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className={passwordError ? "error" : "signup-password"}
+          />
+          <br />
+          {passwordError && <div className="errorMessage">{passwordError}</div>}
 
-        <div className="signup-text">
-          Already have an account? <a href="/login">Login</a>
+          <label
+            htmlFor="confirmPassword"
+            className={confirmPasswordError ? "labelError" : ""}
+          >
+            Confirm Password
+          </label>
+          <br />
+          <input
+            type="password"
+            name="confirmPassword"
+            placeholder="**********"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            className={confirmPasswordError ? "error" : "signup-confirmpassword"}
+          />
+          <br />
+          {confirmPasswordError && (
+            <div className="errorMessage">{confirmPasswordError}</div>
+          )}
+          {signupError && <div className="errorMessage">{signupError}</div>}
+
+          <div
+            className="signup-btn"
+            onClick={handleSignup}
+            style={isSigningUp ? { opacity: 0.6, pointerEvents: "none" } : undefined}
+          >
+            {isSigningUp ? "Signing up..." : "Sign Up"}
+          </div>
+
+          <div className="signup-text">
+            Already have an account? <a href="/login">Login</a>
+          </div>
         </div>
       </div>
 
-      <img
-        id="arrowBack"
-        src={arrowBack}
-        alt="Arrow Back"
-        onClick={handleArrowBack}
-      />
-      <img id="bottomEllipse" src={bottomEllipse} alt="Bottom Ellipse" />
-      <img id="sideEllipse" src={sideEllipse} alt="Side Ellipse" />
-      <img id="polygon" src={polygon} alt="Polygon" />
+      <Footer />
     </div>
   );
 }

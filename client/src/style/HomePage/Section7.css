@@ -1,40 +1,51 @@
 .section7 {
-  background: linear-gradient(180deg, #171923 0%, #1a202c 100%);
-  height: 80vh;
+  position: relative;
+  background: linear-gradient(180deg, var(--surface) 0%, var(--surface-2) 100%);
+  min-height: 80vh;
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  padding: 60px 20px;
+  overflow: hidden;
 }
 
 .section7-header {
-  font-size: 36px;
-  line-height: 43px;
+  position: relative;
+  z-index: 1;
+  font-size: clamp(26px, 4vw, 36px);
+  line-height: 1.2;
   font-weight: 800;
-  width: 750px;
+  width: 100%;
+  max-width: 750px;
 }
 
 .section7-button {
+  position: relative;
+  z-index: 1;
   width: fit-content;
   margin: 30px;
   padding: 15px 30px;
-  border-radius: 6px;
-  background-color: #1a5fff;
-  color: #ffffff;
+  border-radius: var(--radius);
+  background-color: var(--primary);
+  color: var(--bg);
   font-size: 18px;
   line-height: 21px;
   font-weight: 600;
   cursor: pointer;
+  transition: background-color var(--transition), transform var(--transition);
 }
 
 .section7-button:hover {
-  background-color: #0031b8;
-  color: white;
+  background-color: var(--primary-hover);
+  transform: translateY(-2px);
 }
 
 .section7-text {
-  color: #a0aec0;
+  position: relative;
+  z-index: 1;
+  color: var(--text-muted);
   font-size: 16px;
   line-height: 24px;
   font-weight: 400;
@@ -44,16 +55,42 @@
   font-weight: bolder;
 }
 
-#triangleId {
+.shape-triangle-7 {
   position: absolute;
+  width: 250px;
   height: 250px;
-  left: 0px;
-  top: 925%;
+  top: -60px;
+  left: -60px;
+  background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  opacity: 0.2;
+  pointer-events: none;
 }
 
-#halfCircleId {
+.shape-halfcircle-7 {
   position: absolute;
+  width: 250px;
   height: 250px;
-  right: 0px;
-  top: 925%;
+  bottom: -80px;
+  right: -80px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+@media (max-width: 768px) {
+  .shape-triangle-7,
+  .shape-halfcircle-7 {
+    width: 160px;
+    height: 160px;
+  }
+}
+
+@media (max-width: 480px) {
+  .shape-triangle-7,
+  .shape-halfcircle-7 {
+    width: 110px;
+    height: 110px;
+  }
 }
