@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 import { Login } from "../api/User.js";
 import "../style/Login/Login.css";
 import NavBar from "../components/HomePage/NavBar";
@@ -10,6 +11,7 @@ function LoginPage() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [loginError, setLoginError] = useState("");
@@ -45,9 +47,9 @@ function LoginPage() {
 
     try {
       const response = await Login(email, password);
-      const userName = response.data.user.userName;
+      const { firstName, lastName } = response.data.user;
       alert("Login successful");
-      localStorage.setItem("formBotCurrentUser", userName);
+      localStorage.setItem("formBotCurrentUser", `${firstName} ${lastName}`);
       localStorage.setItem("formBotToken", response.data.token);
       navigate("/dashboard");
     } catch (error) {
@@ -84,14 +86,24 @@ function LoginPage() {
             Password
           </label>
           <br />
-          <input
-            type="password"
-            name="password"
-            placeholder="**********"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className={passwordError ? "error" : "login-password"}
-          />
+          <div className="password-input-wrapper">
+            <input
+              type={showPassword ? "text" : "password"}
+              name="password"
+              placeholder="**********"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className={passwordError ? "error" : "login-password"}
+            />
+            <button
+              type="button"
+              className="view-toggle"
+              onClick={() => setShowPassword((show) => !show)}
+              aria-label="Toggle password visibility"
+            >
+              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
+          </div>
           {passwordError && <div className="errorMessage">{passwordError}</div>}
           {loginError && <div className="errorMessage">{loginError}</div>}
           <br />

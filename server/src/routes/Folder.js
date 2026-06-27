@@ -1,7 +1,12 @@
 const express = require("express");
 const router = express.Router();
 
-const { createFolder, getFolders, deleteFolder } = require("../controllers/Folder.js");
+const {
+  createFolder,
+  getFolders,
+  updateFolder,
+  deleteFolder,
+} = require("../controllers/Folder.js");
 const requireAuth = require("../middleware/auth.js");
 const validate = require("../middleware/validate.js");
 const { createFolderSchema } = require("../validation/folderValidation.js");
@@ -9,6 +14,8 @@ const { createFolderSchema } = require("../validation/folderValidation.js");
 router.post("/folders", requireAuth, validate(createFolderSchema), createFolder);
 
 router.get("/folders", requireAuth, getFolders);
+
+router.patch("/folders/:folderId", requireAuth, validate(createFolderSchema), updateFolder);
 
 router.delete("/folders/:folderId", requireAuth, deleteFolder);
 

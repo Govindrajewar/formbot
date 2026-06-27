@@ -1,26 +1,24 @@
 import "../../style/Workspace/Flow.css";
-import start from "../../assets/Workspace/Flow/start.png";
-import deleteLogo from "../../assets/Workspace/Flow/delete.png";
-
-// Bubble Icons
-import textBubble from "../../assets/Workspace/Flow/Bubbles/text.png";
-import image from "../../assets/Workspace/Flow/Bubbles/image.png";
-import video from "../../assets/Workspace/Flow/Bubbles/video.png";
-import gif from "../../assets/Workspace/Flow/Bubbles/gif.png";
-
-// Input Icons
-import textInput from "../../assets/Workspace/Flow/Inputs/text.png";
-import numberInput from "../../assets/Workspace/Flow/Inputs/number.png";
-import emailInput from "../../assets/Workspace/Flow/Inputs/email.png";
-import phoneInput from "../../assets/Workspace/Flow/Inputs/phone.png";
-import dateInput from "../../assets/Workspace/Flow/Inputs/date.png";
-import ratingInput from "../../assets/Workspace/Flow/Inputs/rating.png";
-import buttonInput from "../../assets/Workspace/Flow/Inputs/button.png";
+import {
+  Rocket,
+  X,
+  MessageSquare,
+  Image,
+  Video,
+  Film,
+  TextCursorInput,
+  Hash,
+  Mail,
+  Phone,
+  Calendar,
+  Star,
+  MousePointerClick,
+} from "lucide-react";
 
 const ITEM_TYPES = {
   text: {
     category: "bubble",
-    icon: textBubble,
+    Icon: MessageSquare,
     paletteLabel: "Text",
     paletteAlt: "Text Bubble",
     headerLabel: "Text",
@@ -30,7 +28,7 @@ const ITEM_TYPES = {
   },
   image: {
     category: "bubble",
-    icon: image,
+    Icon: Image,
     paletteLabel: "Image",
     paletteAlt: "Images Bubble",
     headerLabel: "Image",
@@ -40,7 +38,7 @@ const ITEM_TYPES = {
   },
   video: {
     category: "bubble",
-    icon: video,
+    Icon: Video,
     paletteLabel: "Video",
     paletteAlt: "Video Bubble",
     headerLabel: "Video",
@@ -50,7 +48,7 @@ const ITEM_TYPES = {
   },
   gif: {
     category: "bubble",
-    icon: gif,
+    Icon: Film,
     paletteLabel: "GIF",
     paletteAlt: "GIF Bubble",
     headerLabel: "GIF",
@@ -60,7 +58,7 @@ const ITEM_TYPES = {
   },
   textInput: {
     category: "input",
-    icon: textInput,
+    Icon: TextCursorInput,
     paletteLabel: "Text",
     paletteAlt: "Text Input",
     headerLabel: "Input Text",
@@ -70,7 +68,7 @@ const ITEM_TYPES = {
   },
   numberInput: {
     category: "input",
-    icon: numberInput,
+    Icon: Hash,
     paletteLabel: "Number",
     paletteAlt: "Number Input",
     headerLabel: "Input Number",
@@ -80,7 +78,7 @@ const ITEM_TYPES = {
   },
   emailInput: {
     category: "input",
-    icon: emailInput,
+    Icon: Mail,
     paletteLabel: "Email",
     paletteAlt: "Email Input",
     headerLabel: "Input Email",
@@ -90,7 +88,7 @@ const ITEM_TYPES = {
   },
   phoneInput: {
     category: "input",
-    icon: phoneInput,
+    Icon: Phone,
     paletteLabel: "Phone",
     paletteAlt: "Phone Input",
     headerLabel: "Input Phone",
@@ -100,7 +98,7 @@ const ITEM_TYPES = {
   },
   dateInput: {
     category: "input",
-    icon: dateInput,
+    Icon: Calendar,
     paletteLabel: "Date",
     paletteAlt: "Date Input",
     headerLabel: "Input Date",
@@ -110,7 +108,7 @@ const ITEM_TYPES = {
   },
   ratingInput: {
     category: "input",
-    icon: ratingInput,
+    Icon: Star,
     paletteLabel: "Rating",
     paletteAlt: "Rating Input",
     headerLabel: "Input Rating",
@@ -120,7 +118,7 @@ const ITEM_TYPES = {
   },
   buttonInput: {
     category: "input",
-    icon: buttonInput,
+    Icon: MousePointerClick,
     paletteLabel: "Button",
     paletteAlt: "Button Input",
     headerLabel: "Input Button",
@@ -133,15 +131,17 @@ const ITEM_TYPES = {
 const BUBBLE_TYPES = Object.entries(ITEM_TYPES).filter(([, cfg]) => cfg.category === "bubble");
 const INPUT_PALETTE_TYPES = Object.entries(ITEM_TYPES).filter(([, cfg]) => cfg.category === "input");
 
+export const BUBBLE_TYPE_LABELS = Object.fromEntries(
+  BUBBLE_TYPES.map(([type, config]) => [type, config.headerLabel])
+);
+
 function Flow({ dynamicItems, setDynamicItems, itemCounts, setItemCounts }) {
   const handleAddItem = (type) => {
-    const config = ITEM_TYPES[type];
     const newId = itemCounts[type] + 1;
     const newItem = {
       id: `${type}-${newId}`,
       type,
-      src: config.icon,
-      placeholder: config.placeholder,
+      placeholder: ITEM_TYPES[type].placeholder,
       value: "",
     };
 
@@ -177,7 +177,7 @@ function Flow({ dynamicItems, setDynamicItems, itemCounts, setItemCounts }) {
                 key={type}
                 onClick={() => handleAddItem(type)}
               >
-                <img src={config.icon} alt={config.paletteAlt} />
+                <config.Icon size={22} aria-label={config.paletteAlt} />
                 {config.paletteLabel}
               </div>
             ))}
@@ -191,7 +191,7 @@ function Flow({ dynamicItems, setDynamicItems, itemCounts, setItemCounts }) {
                 key={type}
                 onClick={() => handleAddItem(type)}
               >
-                <img src={config.icon} alt={config.paletteAlt} />
+                <config.Icon size={22} aria-label={config.paletteAlt} />
                 {config.paletteLabel}
               </div>
             ))}
@@ -201,7 +201,7 @@ function Flow({ dynamicItems, setDynamicItems, itemCounts, setItemCounts }) {
 
       <div className="flowchart-container">
         <div className="start-header">
-          <img src={start} alt="start" />
+          <Rocket size={20} />
           Start
         </div>
         {dynamicItems.map((item) => {
@@ -209,12 +209,14 @@ function Flow({ dynamicItems, setDynamicItems, itemCounts, setItemCounts }) {
 
           return (
             <div className="text-item" key={item.id}>
-              <img
-                src={deleteLogo}
-                alt="delete"
+              <div
                 id="deleteId"
+                role="button"
+                aria-label="delete"
                 onClick={() => handleDeleteItem(item.id)}
-              />
+              >
+                <X size={14} />
+              </div>
               <div className="item-header">
                 {config
                   ? `${config.headerLabel} ${item.id.split("-")[1]}`
@@ -224,7 +226,7 @@ function Flow({ dynamicItems, setDynamicItems, itemCounts, setItemCounts }) {
               <div className="item-data">
                 {config ? (
                   <>
-                    <img src={item.src} alt={config.itemAlt} />
+                    <config.Icon size={20} aria-label={config.itemAlt} />
                     <input
                       type={config.htmlType}
                       placeholder={item.placeholder}

@@ -8,7 +8,8 @@ const passwordSchema = Joi.string().pattern(PASSWORD_PATTERN).required().message
 });
 
 const signupSchema = Joi.object({
-  userName: Joi.string().trim().min(3).max(30).required(),
+  firstName: Joi.string().trim().min(1).max(30).required(),
+  lastName: Joi.string().trim().min(1).max(30).required(),
   email: Joi.string().trim().email().required(),
   password: passwordSchema,
 });
@@ -19,7 +20,8 @@ const loginSchema = Joi.object({
 });
 
 const updateUserSchema = Joi.object({
-  userName: Joi.string().trim().min(3).max(30).required(),
+  firstName: Joi.string().trim().min(1).max(30).required(),
+  lastName: Joi.string().trim().min(1).max(30).required(),
   email: Joi.string().trim().email().required(),
   oldPassword: Joi.string().required(),
   newPassword: passwordSchema,

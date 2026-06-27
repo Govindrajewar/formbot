@@ -24,12 +24,14 @@ function Settings() {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showOldPassword, setShowOldPassword] = useState(false);
 
-  const [name, setName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [errorMessages, setErrorMessages] = useState({
-    name: "",
+    firstName: "",
+    lastName: "",
     email: "",
     oldPassword: "",
     newPassword: "",
@@ -39,7 +41,8 @@ function Settings() {
   useEffect(() => {
     const decoded = decodeToken(localStorage.getItem("formBotToken"));
     if (decoded) {
-      setName(decoded.userName || "");
+      setFirstName(decoded.firstName || "");
+      setLastName(decoded.lastName || "");
       setEmail(decoded.email || "");
     }
   }, []);
@@ -49,8 +52,12 @@ function Settings() {
 
     let errors = {};
 
-    if (!name) {
-      errors.name = "Name cannot be empty";
+    if (!firstName) {
+      errors.firstName = "First name cannot be empty";
+    }
+
+    if (!lastName) {
+      errors.lastName = "Last name cannot be empty";
     }
 
     if (!email) {
@@ -79,13 +86,18 @@ function Settings() {
 
     try {
       const response = await axiosInstance.patch("/user", {
-        userName: name,
+        firstName,
+        lastName,
         email,
         oldPassword,
         newPassword,
       });
 
-      localStorage.setItem("formBotCurrentUser", response.data.user.userName);
+      const updatedUser = response.data.user;
+      localStorage.setItem(
+        "formBotCurrentUser",
+        `${updatedUser.firstName} ${updatedUser.lastName}`
+      );
       localStorage.setItem("formBotToken", response.data.token);
       setOldPassword("");
       setNewPassword("");
@@ -117,13 +129,25 @@ function Settings() {
             <User size={20} />
             <input
               type="text"
-              placeholder="Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              placeholder="First name"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
             />
           </div>
-          {errorMessages.name && (
-            <div className="settings-error">{errorMessages.name}</div>
+          {errorMessages.firstName && (
+            <div className="settings-error">{errorMessages.firstName}</div>
+          )}
+          <div className="data-container">
+            <User size={20} />
+            <input
+              type="text"
+              placeholder="Last name"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+            />
+          </div>
+          {errorMessages.lastName && (
+            <div className="settings-error">{errorMessages.lastName}</div>
           )}
           <div className="data-container">
             <Lock size={20} />

@@ -6,81 +6,22 @@
   color: var(--text);
 }
 
+.desktop .navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  box-sizing: border-box;
+  z-index: 50;
+}
+
 .chat-container {
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 10px;
   padding: 20px;
-  margin: 0 5% 60px;
-}
-
-.desktop.light-theme {
-  background-color: #ffffff;
-  color: #171923;
-}
-
-.desktop.light-theme .form-title {
-  border-bottom-color: #e2e8f0;
-  color: #171923;
-}
-
-.desktop.light-theme .chat-bubble {
-  background-color: #f7f8ff;
-  border-color: #e2e8f0;
-}
-
-.desktop.light-theme .chat-bubble p {
-  color: #171923;
-}
-
-.desktop.light-theme .date-input,
-.desktop.light-theme .phone-input,
-.desktop.light-theme .email-input,
-.desktop.light-theme .number-input,
-.desktop.light-theme .text-input {
-  background-color: #f7f8ff;
-  color: #171923;
-  border-color: #e2e8f0;
-}
-
-.desktop.light-theme .text-input-label,
-.desktop.light-theme .loading-message {
-  color: #171923;
-}
-
-.desktop.blue-theme {
-  background-color: #508c9b;
-  color: #ffffff;
-}
-
-.desktop.blue-theme .form-title {
-  border-bottom-color: #ffffff66;
-  color: #ffffff;
-}
-
-.desktop.blue-theme .chat-bubble {
-  background-color: #3f6e7a;
-  border-color: #ffffff33;
-}
-
-.desktop.blue-theme .chat-bubble p {
-  color: #ffffff;
-}
-
-.desktop.blue-theme .date-input,
-.desktop.blue-theme .phone-input,
-.desktop.blue-theme .email-input,
-.desktop.blue-theme .number-input,
-.desktop.blue-theme .text-input {
-  background-color: #3f6e7a;
-  color: #ffffff;
-  border-color: #ffffff33;
-}
-
-.desktop.blue-theme .text-input-label,
-.desktop.blue-theme .loading-message {
-  color: #ffffff;
+  margin: 90px 5% 60px;
 }
 
 .chat-container .form-title {
@@ -295,7 +236,7 @@
 
 @media (max-width: 480px) {
   .chat-container {
-    margin: 0 4% 40px;
+    margin: 130px 4% 40px;
   }
 
   .data-image,

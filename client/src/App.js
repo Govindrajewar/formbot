@@ -6,11 +6,14 @@ import SignupPage from "./pages/SignupPage";
 import Settings from "./pages/Settings";
 import Workspace from "./pages/Workspace";
 import PostLogin from "./pages/PostLogin";
+import Responses from "./pages/Responses";
 import Desktop from "./pages/Desktop";
 import ProtectedRoute from "./components/ProtectedRoute";
+import { ColorModeProvider } from "./context/ColorModeContext";
 
 function App() {
   return (
+    <ColorModeProvider>
     <div className="App">
       <BrowserRouter>
         <Routes>
@@ -41,11 +44,21 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/responses/:formId"
+            element={
+              <ProtectedRoute>
+                <Responses />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/desktop" element={<Desktop />} />
           <Route path="/form/:formId" element={<Desktop />} />
+          <Route path="/preview" element={<Desktop />} />
         </Routes>
       </BrowserRouter>
     </div>
+    </ColorModeProvider>
   );
 }
 export default App;

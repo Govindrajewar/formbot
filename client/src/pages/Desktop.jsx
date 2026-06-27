@@ -35,7 +35,8 @@ const RUNTIME_INPUT_CONFIG = {
 function Desktop() {
   const location = useLocation();
   const navigate = useNavigate();
-  const currentFormId = location.pathname.split("/").at(2);
+  const isPreview = location.pathname === "/preview";
+  const currentFormId = isPreview ? null : location.pathname.split("/").at(2);
   const createFormBot = () => navigate("/login");
   const [data, setData] = useState(null);
   const [inputValues, setInputValues] = useState({});
@@ -44,6 +45,16 @@ function Desktop() {
   const [fetchError, setFetchError] = useState("");
 
   useEffect(() => {
+    if (isPreview) {
+      const stored = localStorage.getItem("formBotPreviewData");
+      if (stored) {
+        setData(JSON.parse(stored));
+      } else {
+        setFetchError("No preview data found");
+      }
+      return;
+    }
+
     axios
       .get(`${BACKEND_URL}/viewForm/${currentFormId}`)
       .then((response) => {
@@ -57,7 +68,7 @@ function Desktop() {
           error.response?.data?.message || "This form could not be loaded"
         );
       });
-  }, [currentFormId]);
+  }, [currentFormId, isPreview]);
 
   const handleInputChange = (index, value, type) => {
     setInputValues({
@@ -113,7 +124,7 @@ function Desktop() {
       (itemIndex) => updatedIsDisabled[itemIndex]
     );
 
-    if (allInputsAnswered) {
+    if (allInputsAnswered && !isPreview) {
       const answers = inputItemIndexes.map((itemIndex) => ({
         itemId: updatedData.itemList[itemIndex].id,
         type: updatedData.itemList[itemIndex].type,
@@ -133,10 +144,8 @@ function Desktop() {
   const validateDate = (date) => /^\d{4}-\d{2}-\d{2}$/.test(date);
   const validateRating = (rating) => rating >= 1 && rating <= 5;
 
-  const themeClass = data?.theme && data.theme !== "dark" ? `${data.theme}-theme` : "";
-
   return (
-    <div className={`desktop ${themeClass}`}>
+    <div className="desktop">
       <NavBar createFormBot={createFormBot} />
       <div className="chat-container">
         {data ? (
@@ -210,13 +219,15 @@ function Desktop() {
                             disabled={isDisabled[index]}
                           />
                         )}
-                        <button
-                          className="submit-button"
-                          onClick={() => handleFormSubmit(index)}
-                          disabled={!inputValues[index]}
-                        >
-                          <img src={send} alt="Send" />
-                        </button>
+                        {!isDisabled[index] && (
+                          <button
+                            className="submit-button"
+                            onClick={() => handleFormSubmit(index)}
+                            disabled={!inputValues[index]}
+                          >
+                            <img src={send} alt="Send" />
+                          </button>
+                        )}
                         {errors[index] && (
                           <div className="display-error-message">
                             {errors[index]}

@@ -6,10 +6,11 @@ const JWT_EXPIRES_IN_SECONDS = 6000; // 100 minutes
 
 const signupUser = async (req, res) => {
   try {
-    const { userName, email, password } = req.body;
+    const { firstName, lastName, email, password } = req.body;
     const encryptedPassword = await bcrypt.hash(password, 10);
     await User.create({
-      userName,
+      firstName,
+      lastName,
       email,
       password: encryptedPassword,
     });
@@ -22,7 +23,7 @@ const signupUser = async (req, res) => {
     if (error.code === 11000) {
       return res.status(409).json({
         status: "FAILED",
-        message: "That username or email is already in use",
+        message: "That email is already in use",
       });
     }
     res.status(500).json({
@@ -57,7 +58,12 @@ const loginUser = async (req, res) => {
     delete user.password;
 
     const jwToken = jwt.sign(
-      { id: user._id, email: user.email, userName: user.userName },
+      {
+        id: user._id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+      },
       process.env.jwtPrivateKey,
       { expiresIn: JWT_EXPIRES_IN_SECONDS }
     );
@@ -78,7 +84,7 @@ const loginUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
-    const { userName, email, oldPassword, newPassword } = req.body;
+    const { firstName, lastName, email, oldPassword, newPassword } = req.body;
 
     const user = await User.findById(req.user.id);
     if (!user) {
@@ -94,7 +100,8 @@ const updateUser = async (req, res) => {
         .json({ status: "FAILED", message: "Old password is incorrect" });
     }
 
-    user.userName = userName;
+    user.firstName = firstName;
+    user.lastName = lastName;
     user.email = email;
     user.password = await bcrypt.hash(newPassword, 10);
     await user.save();
@@ -106,7 +113,8 @@ const updateUser = async (req, res) => {
       {
         id: updatedUser._id,
         email: updatedUser.email,
-        userName: updatedUser.userName,
+        firstName: updatedUser.firstName,
+        lastName: updatedUser.lastName,
       },
       process.env.jwtPrivateKey,
       { expiresIn: JWT_EXPIRES_IN_SECONDS }
@@ -122,7 +130,7 @@ const updateUser = async (req, res) => {
     if (error.code === 11000) {
       return res.status(409).json({
         status: "FAILED",
-        message: "That username or email is already in use",
+        message: "That email is already in use",
       });
     }
     res.status(500).json({

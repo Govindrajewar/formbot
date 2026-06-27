@@ -90,10 +90,21 @@
   color: var(--primary);
 }
 
+.tab-icons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.edit-icon,
 .delete-icon {
   display: flex;
   color: var(--text-muted);
   transition: color var(--transition);
+}
+
+.edit-icon:hover {
+  color: var(--primary);
 }
 
 .delete-icon:hover {
@@ -123,6 +134,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  text-align: center;
   gap: 10px;
   background-color: var(--primary);
   color: var(--bg);
@@ -141,82 +153,111 @@
   transform: translateY(-2px);
 }
 
-.createNewFolder,
-.DeleteNewFolder {
-  width: min(500px, 90vw);
-  height: fit-content;
-  border-radius: 20px;
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal-card {
+  width: min(420px, 90vw);
   background-color: var(--surface);
   border: 1px solid var(--border);
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  padding: 30px 20px;
-  box-sizing: border-box;
-
-  display: flex;
-  flex-direction: column;
-  align-items: start;
-}
-
-.createNewFolder label,
-#DeleteFolderId {
-  font-size: 24px;
-  font-weight: 600;
-  line-height: 1.4;
-  color: var(--text);
-}
-
-.createNewFolder input {
-  font-size: 18px;
-  font-weight: 600;
-  line-height: 1.4;
-  margin-top: 20px;
-  padding: 10px;
-  width: 90%;
-  color: var(--text);
-  background-color: var(--surface-2);
   border-radius: 16px;
-  border: 1px solid var(--border);
-  outline: none;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  padding: 24px;
   box-sizing: border-box;
 }
 
-.createNewFolder-buttons,
-.DeleteNewFolder-buttons {
+.modal-card-header {
   display: flex;
-  justify-content: space-around;
   align-items: center;
-  margin-top: 20px;
+  gap: 10px;
   color: var(--text);
-  width: 100%;
-}
-
-.confirm-button,
-.done-button,
-.cancel-button {
-  font-size: 22px;
+  font-size: 17px;
   font-weight: 600;
   line-height: 1.4;
-  background-color: transparent;
-  cursor: pointer;
-  transition: color var(--transition);
 }
 
-.confirm-button:hover,
-.done-button:hover,
-.cancel-button:hover {
+.modal-card-header svg {
+  flex-shrink: 0;
   color: var(--primary);
 }
 
-.center-line {
-  font-size: 32px;
-  color: var(--border);
+.modal-card input {
+  font-size: 15px;
+  font-weight: 500;
+  margin-top: 16px;
+  padding: 11px 14px;
+  width: 100%;
+  color: var(--text);
+  background-color: var(--surface-2);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color var(--transition);
+}
+
+.modal-card input:focus {
+  border-color: var(--primary);
+}
+
+.modal-card-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.modal-card-buttons button {
+  font-size: 14px;
+  font-weight: 600;
+  padding: 9px 18px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  border: none;
+  transition: background-color var(--transition), border-color var(--transition),
+    color var(--transition);
+}
+
+.modal-btn-cancel {
+  background-color: var(--surface-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.modal-btn-cancel:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.modal-btn-primary {
+  background-color: var(--primary);
+  color: var(--bg);
+}
+
+.modal-btn-primary:hover {
+  background-color: var(--primary-hover);
+}
+
+.modal-btn-danger {
+  background-color: var(--error);
+  color: #ffffff;
+}
+
+.modal-btn-danger:hover {
+  opacity: 0.9;
 }
 
 .form-list-card {
-  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .form-list-item {
@@ -224,7 +265,7 @@
   border: 1px solid var(--border);
   padding: 20px;
   width: 100%;
-  height: 100%;
+  flex: 1;
   border-radius: var(--radius);
   cursor: pointer;
   box-sizing: border-box;
@@ -241,10 +282,14 @@
   transform: translateY(-2px);
 }
 
-.delete-form-icon {
-  position: absolute;
-  top: 8px;
-  right: 8px;
+.form-card-actions {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.form-icon-btn {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -258,7 +303,11 @@
   transition: color var(--transition);
 }
 
-.delete-form-icon:hover {
+.form-icon-btn:hover {
+  color: var(--primary);
+}
+
+.form-icon-btn-delete:hover {
   color: var(--error);
 }
 

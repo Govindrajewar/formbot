@@ -10,7 +10,8 @@ function HomePage() {
   const navigate = useNavigate();
 
   const createFormBot = () => {
-    navigate("/login");
+    const isLoggedIn = Boolean(localStorage.getItem("formBotToken"));
+    navigate(isLoggedIn ? "/dashboard" : "/login");
   };
 
   return (

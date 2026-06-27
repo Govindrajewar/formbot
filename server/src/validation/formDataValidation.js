@@ -31,7 +31,6 @@ const setFormDataSchema = Joi.object({
     .pattern(/^[0-9a-fA-F]{24}$/)
     .allow(null, "")
     .optional(),
-  theme: Joi.string().valid("light", "dark", "blue").default("light"),
 });
 
 module.exports = {

@@ -8,7 +8,6 @@ const setFormData = async (req, res) => {
       formName: req.body.formName,
       itemList: req.body.itemList,
       folderId: req.body.folderId || null,
-      theme: req.body.theme || "light",
       userId: req.user.id,
     });
     await formData.save();
@@ -42,13 +41,38 @@ const updateFormData = async (req, res) => {
     form.formName = req.body.formName;
     form.itemList = req.body.itemList;
     form.folderId = req.body.folderId || null;
-    form.theme = req.body.theme || "light";
     await form.save();
 
     res.status(200).json(form);
   } catch (error) {
     console.error("Error updating form data:", error);
     res.status(400).json({ status: "ERROR", message: error.message });
+  }
+};
+
+const getFormById = async (req, res) => {
+  try {
+    const currentFormId = req.params.currentFormId;
+
+    if (!mongoose.Types.ObjectId.isValid(currentFormId)) {
+      return res.status(400).json({ status: "FAILED", message: "Invalid form ID" });
+    }
+
+    const form = await FormData.findOne({ _id: currentFormId });
+
+    if (!form) {
+      return res.status(404).json({ status: "FAILED", message: "Form not found" });
+    }
+
+    if (String(form.userId) !== req.user.id) {
+      return res
+        .status(403)
+        .json({ status: "FAILED", message: "You are not allowed to view this form" });
+    }
+
+    res.status(200).json(form);
+  } catch (error) {
+    res.status(500).json({ status: "ERROR", message: "Error retrieving form" });
   }
 };
 
@@ -124,6 +148,7 @@ const getCurrentFormData = async (req, res) => {
 module.exports = {
   setFormData,
   updateFormData,
+  getFormById,
   getFormData,
   deleteFormData,
   getCurrentFormData,

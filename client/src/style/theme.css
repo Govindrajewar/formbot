@@ -1,5 +1,24 @@
 :root {
+  --bg: #ffffff;
+  --bg-rgb: 255, 255, 255;
+  --surface: #f7f9fb;
+  --surface-2: #eef1f5;
+  --primary: #0d9488;
+  --primary-hover: #0f766e;
+  --accent: #2563eb;
+  --text: #0f172a;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --success: #16a34a;
+  --error: #dc2626;
+
+  --radius: 8px;
+  --transition: 0.18s ease;
+}
+
+:root[data-color-mode="dark"] {
   --bg: #0d1117;
+  --bg-rgb: 13, 17, 23;
   --surface: #161b22;
   --surface-2: #1f2630;
   --primary: #2dd4bf;
@@ -10,9 +29,6 @@
   --border: #2a313c;
   --success: #4ade80;
   --error: #f87171;
-
-  --radius: 8px;
-  --transition: 0.18s ease;
 }
 
 .reveal {

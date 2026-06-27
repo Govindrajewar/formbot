@@ -105,6 +105,36 @@
   margin-top: 10px;
 }
 
+.login .password-input-wrapper {
+  position: relative;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.login .password-input-wrapper input {
+  margin-top: 0;
+  padding-right: 40px;
+}
+
+.login .password-input-wrapper .view-toggle {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0;
+  transition: color var(--transition);
+}
+
+.login .password-input-wrapper .view-toggle:hover {
+  color: var(--primary);
+}
+
 .login a {
   color: var(--primary);
   margin-left: 5px;

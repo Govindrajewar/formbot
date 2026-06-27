@@ -26,6 +26,35 @@ const getFolders = async (req, res) => {
   }
 };
 
+const updateFolder = async (req, res) => {
+  try {
+    const folderId = req.params.folderId;
+
+    if (!mongoose.Types.ObjectId.isValid(folderId)) {
+      return res.status(400).json({ status: "FAILED", message: "Invalid folder ID" });
+    }
+
+    const folder = await Folder.findById(folderId);
+
+    if (!folder) {
+      return res.status(404).json({ status: "FAILED", message: "Folder not found" });
+    }
+
+    if (String(folder.userId) !== req.user.id) {
+      return res
+        .status(403)
+        .json({ status: "FAILED", message: "You are not allowed to update this folder" });
+    }
+
+    folder.name = req.body.name;
+    await folder.save();
+
+    res.status(200).json(folder);
+  } catch (error) {
+    res.status(500).json({ status: "ERROR", message: "Error updating folder" });
+  }
+};
+
 const deleteFolder = async (req, res) => {
   try {
     const folderId = req.params.folderId;
@@ -56,5 +85,6 @@ const deleteFolder = async (req, res) => {
 module.exports = {
   createFolder,
   getFolders,
+  updateFolder,
   deleteFolder,
 };

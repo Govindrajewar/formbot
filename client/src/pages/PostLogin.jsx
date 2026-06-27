@@ -1,23 +1,30 @@
 import { useState, useEffect } from "react";
 import axiosInstance from "../api/axiosInstance";
 import "../style/PostLogin/PostLogin.css";
-import { FolderPlus, Trash2, Plus } from "lucide-react";
+import { FolderPlus, Trash2, Plus, Pencil, BarChart3, AlertTriangle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import NavBar from "../components/HomePage/NavBar";
 import Footer from "../components/HomePage/Footer";
+import ShareMenu from "../components/Shared/ShareMenu";
+import { getFirstName } from "../utils/formatName";
 
 function PostLogin() {
-  const [userName] = useState(localStorage.getItem("formBotCurrentUser"));
+  const [userName] = useState(getFirstName(localStorage.getItem("formBotCurrentUser")));
   const [isCreateFolder, setIsCreateFolder] = useState(false);
   const [newFolderName, setNewFolderName] = useState("");
   const [folders, setFolders] = useState([]);
   const [isDeleteFolder, setIsDeleteFolder] = useState(false);
   const [deleteIndexFolder, setDeleteIndexFolder] = useState(0);
+  const [editFolderTarget, setEditFolderTarget] = useState(null);
+  const [editFolderName, setEditFolderName] = useState("");
   const [selectedFolderId, setSelectedFolderId] = useState(null);
   const [forms, setForms] = useState([]);
   const [formsPage, setFormsPage] = useState(1);
   const [hasMoreForms, setHasMoreForms] = useState(false);
   const [isLoadingForms, setIsLoadingForms] = useState(true);
+  const [pendingFormAction, setPendingFormAction] = useState(null);
+  const [isCreateForm, setIsCreateForm] = useState(false);
+  const [newFormName, setNewFormName] = useState("");
 
   const navigate = useNavigate();
 
@@ -68,6 +75,31 @@ function PostLogin() {
     navigate(`/form/${formId}`);
   };
 
+  const editForm = (formId) => {
+    navigate("/Workspace", { state: { formId } });
+  };
+
+  const viewResponses = (formId) => {
+    navigate(`/responses/${formId}`);
+  };
+
+  const requestFormAction = (type, formId, formName) => {
+    setPendingFormAction({ type, formId, formName });
+  };
+
+  const confirmFormAction = () => {
+    if (!pendingFormAction) return;
+    const { type, formId } = pendingFormAction;
+
+    if (type === "edit") {
+      editForm(formId);
+    } else if (type === "delete") {
+      handleDeleteForm(formId);
+    }
+
+    setPendingFormAction(null);
+  };
+
   const handleCreateFolder = () => {
     if (newFolderName.trim() !== "") {
       axiosInstance
@@ -79,13 +111,36 @@ function PostLogin() {
           console.error("There was an error creating the folder!", error);
         });
       setNewFolderName("");
-      setIsCreateFolder(!isCreateFolder);
+      setIsCreateFolder(false);
     }
   };
 
   const deleteFolder = (deleteIndexFolder) => {
-    setIsDeleteFolder(!isDeleteFolder);
+    setIsDeleteFolder(true);
     setDeleteIndexFolder(deleteIndexFolder);
+  };
+
+  const startEditFolder = (folder) => {
+    setEditFolderTarget(folder);
+    setEditFolderName(folder.name);
+  };
+
+  const handleUpdateFolder = () => {
+    if (!editFolderTarget || editFolderName.trim() === "") return;
+
+    axiosInstance
+      .patch(`/folders/${editFolderTarget._id}`, { name: editFolderName.trim() })
+      .then((response) => {
+        setFolders((prev) =>
+          prev.map((folder) => (folder._id === response.data._id ? response.data : folder))
+        );
+      })
+      .catch((error) => {
+        console.error("There was an error updating the folder!", error);
+      });
+
+    setEditFolderTarget(null);
+    setEditFolderName("");
   };
 
   const handleDeleteFolder = () => {
@@ -103,24 +158,33 @@ function PostLogin() {
         console.error("There was an error deleting the folder!", error);
       });
 
-    setIsDeleteFolder(!isDeleteFolder);
+    setIsDeleteFolder(false);
   };
 
-  const cancelButton = () => {
+  const closeAnyModal = () => {
+    setIsCreateFolder(false);
     setNewFolderName("");
+    setIsDeleteFolder(false);
     setDeleteIndexFolder(0);
-
-    if (isCreateFolder) {
-      setIsCreateFolder(!isCreateFolder);
-    }
-
-    if (isDeleteFolder) {
-      setIsDeleteFolder(!isDeleteFolder);
-    }
+    setEditFolderTarget(null);
+    setEditFolderName("");
+    setPendingFormAction(null);
+    setIsCreateForm(false);
+    setNewFormName("");
   };
 
   const createTypeBot = () => {
-    navigate("/Workspace", { state: { folderId: selectedFolderId } });
+    setIsCreateForm(true);
+  };
+
+  const handleCreateForm = () => {
+    if (newFormName.trim() === "") return;
+
+    navigate("/Workspace", {
+      state: { folderId: selectedFolderId, formName: newFormName.trim() },
+    });
+    setIsCreateForm(false);
+    setNewFormName("");
   };
 
   // TODO: Modify the delete functionality in backend
@@ -146,10 +210,7 @@ function PostLogin() {
       <div className="dashboard-main">
         <div className="workspace-content">
           <div className="workspace-folder-content">
-            <div
-              className="folder-button"
-              onClick={() => setIsCreateFolder(!isCreateFolder)}
-            >
+            <div className="folder-button" onClick={() => setIsCreateFolder(true)}>
               <FolderPlus size={16} />
               Create a folder
             </div>
@@ -167,14 +228,25 @@ function PostLogin() {
                   onClick={() => setSelectedFolderId(folder._id)}
                 >
                   {folder.name}
-                  <span
-                    className="delete-icon"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      deleteFolder(index);
-                    }}
-                  >
-                    <Trash2 size={16} />
+                  <span className="tab-icons">
+                    <span
+                      className="edit-icon"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        startEditFolder(folder);
+                      }}
+                    >
+                      <Pencil size={14} />
+                    </span>
+                    <span
+                      className="delete-icon"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        deleteFolder(index);
+                      }}
+                    >
+                      <Trash2 size={14} />
+                    </span>
                   </span>
                 </div>
               ))}
@@ -184,7 +256,7 @@ function PostLogin() {
           <div className="create-typebot">
             <div className="typebot-button" onClick={createTypeBot}>
               <Plus className="plus-sign" size={40} />
-              Create a TypeBot
+              <span>Create a Form</span>
             </div>
 
             {isLoadingForms ? (
@@ -203,13 +275,33 @@ function PostLogin() {
                     <span>{formName}</span>
                   </div>
 
-                  <button
-                    className="delete-form-icon"
-                    aria-label="Delete form"
-                    onClick={() => handleDeleteForm(formId)}
-                  >
-                    <Trash2 size={16} />
-                  </button>
+                  <div className="form-card-actions">
+                    <button
+                      className="form-icon-btn"
+                      aria-label="View responses"
+                      onClick={() => viewResponses(formId)}
+                    >
+                      <BarChart3 size={16} />
+                    </button>
+                    <button
+                      className="form-icon-btn"
+                      aria-label="Edit form"
+                      onClick={() => requestFormAction("edit", formId, formName)}
+                    >
+                      <Pencil size={16} />
+                    </button>
+                    <ShareMenu
+                      variant="icon"
+                      link={`${window.location.origin}/form/${formId}`}
+                    />
+                    <button
+                      className="form-icon-btn form-icon-btn-delete"
+                      aria-label="Delete form"
+                      onClick={() => requestFormAction("delete", formId, formName)}
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
                 </div>
               ))
             )}
@@ -222,43 +314,137 @@ function PostLogin() {
           )}
         </div>
 
-        {isCreateFolder && (
-          <div className="createNewFolder">
-            <label htmlFor="createFolderId">Create New Folder</label>
-            <input
-              type="text"
-              id="createFolderId"
-              placeholder="Enter folder name"
-              value={newFolderName}
-              onChange={(e) => setNewFolderName(e.target.value)}
-            />
-            <div className="createNewFolder-buttons">
-              <div className="done-button" onClick={handleCreateFolder}>
-                Done
+        {(isCreateFolder ||
+          isDeleteFolder ||
+          editFolderTarget ||
+          pendingFormAction ||
+          isCreateForm) && (
+          <div className="modal-overlay" onClick={closeAnyModal}>
+            {isCreateFolder && (
+              <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+                <div className="modal-card-header">
+                  <FolderPlus size={20} />
+                  <label htmlFor="createFolderId">Create new folder</label>
+                </div>
+                <input
+                  type="text"
+                  id="createFolderId"
+                  placeholder="Enter folder name"
+                  autoFocus
+                  value={newFolderName}
+                  onChange={(e) => setNewFolderName(e.target.value)}
+                />
+                <div className="modal-card-buttons">
+                  <button className="modal-btn-cancel" onClick={closeAnyModal}>
+                    Cancel
+                  </button>
+                  <button className="modal-btn-primary" onClick={handleCreateFolder}>
+                    Done
+                  </button>
+                </div>
               </div>
-              <div className="center-line">|</div>
-              <div className="cancel-button" onClick={cancelButton}>
-                Cancel
-              </div>
-            </div>
-          </div>
-        )}
+            )}
 
-        {isDeleteFolder && (
-          <div className="DeleteNewFolder">
-            <div id="DeleteFolderId">
-              Are you sure you want to delete this folder ?
-            </div>
+            {editFolderTarget && (
+              <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+                <div className="modal-card-header">
+                  <Pencil size={20} />
+                  <label htmlFor="editFolderNameId">Rename folder</label>
+                </div>
+                <input
+                  type="text"
+                  id="editFolderNameId"
+                  placeholder="Enter folder name"
+                  autoFocus
+                  value={editFolderName}
+                  onChange={(e) => setEditFolderName(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleUpdateFolder()}
+                />
+                <div className="modal-card-buttons">
+                  <button className="modal-btn-cancel" onClick={closeAnyModal}>
+                    Cancel
+                  </button>
+                  <button className="modal-btn-primary" onClick={handleUpdateFolder}>
+                    Save
+                  </button>
+                </div>
+              </div>
+            )}
 
-            <div className="DeleteNewFolder-buttons">
-              <div className="confirm-button" onClick={handleDeleteFolder}>
-                Confirm
+            {isDeleteFolder && (
+              <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+                <div className="modal-card-header">
+                  <AlertTriangle size={20} />
+                  <span>Delete this folder?</span>
+                </div>
+                <div className="modal-card-buttons">
+                  <button className="modal-btn-cancel" onClick={closeAnyModal}>
+                    Cancel
+                  </button>
+                  <button className="modal-btn-danger" onClick={handleDeleteFolder}>
+                    Delete
+                  </button>
+                </div>
               </div>
-              <div className="center-line">|</div>
-              <div className="cancel-button" onClick={cancelButton}>
-                Cancel
+            )}
+
+            {pendingFormAction && (
+              <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+                <div className="modal-card-header">
+                  {pendingFormAction.type === "delete" ? (
+                    <AlertTriangle size={20} />
+                  ) : (
+                    <Pencil size={20} />
+                  )}
+                  <span>
+                    {pendingFormAction.type === "delete"
+                      ? `Delete "${pendingFormAction.formName}"? This can't be undone.`
+                      : `Edit "${pendingFormAction.formName}"?`}
+                  </span>
+                </div>
+                <div className="modal-card-buttons">
+                  <button className="modal-btn-cancel" onClick={closeAnyModal}>
+                    Cancel
+                  </button>
+                  <button
+                    className={
+                      pendingFormAction.type === "delete"
+                        ? "modal-btn-danger"
+                        : "modal-btn-primary"
+                    }
+                    onClick={confirmFormAction}
+                  >
+                    {pendingFormAction.type === "delete" ? "Delete" : "Edit"}
+                  </button>
+                </div>
               </div>
-            </div>
+            )}
+
+            {isCreateForm && (
+              <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+                <div className="modal-card-header">
+                  <Plus size={20} />
+                  <label htmlFor="createFormNameId">Name your form</label>
+                </div>
+                <input
+                  type="text"
+                  id="createFormNameId"
+                  placeholder="Enter form name"
+                  autoFocus
+                  value={newFormName}
+                  onChange={(e) => setNewFormName(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleCreateForm()}
+                />
+                <div className="modal-card-buttons">
+                  <button className="modal-btn-cancel" onClick={closeAnyModal}>
+                    Cancel
+                  </button>
+                  <button className="modal-btn-primary" onClick={handleCreateForm}>
+                    Continue
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>

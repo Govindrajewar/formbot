@@ -4,6 +4,7 @@ const router = express.Router();
 const {
   setFormData,
   updateFormData,
+  getFormById,
   getFormData,
   deleteFormData,
   getCurrentFormData,
@@ -22,6 +23,8 @@ router.patch(
 );
 
 router.get("/formdata", requireAuth, getFormData);
+
+router.get("/formdata/:currentFormId", requireAuth, getFormById);
 
 // Public: this is the share/fill-out link for a form, accessed without an account.
 router.get("/viewForm/:currentFormId", getCurrentFormData);

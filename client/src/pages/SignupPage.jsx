@@ -13,13 +13,15 @@ import {
 function SignupPage() {
   const navigate = useNavigate();
 
-  const [userName, setUserName] = useState();
+  const [firstName, setFirstName] = useState();
+  const [lastName, setLastName] = useState();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [confirmPassword, setConfirmPassword] = useState();
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
-  const [usernameError, setUsernameError] = useState("");
+  const [firstNameError, setFirstNameError] = useState("");
+  const [lastNameError, setLastNameError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
   const [signupError, setSignupError] = useState("");
   const [isSigningUp, setIsSigningUp] = useState(false);
@@ -29,11 +31,18 @@ function SignupPage() {
 
     let isValid = true;
 
-    if (!userName) {
-      setUsernameError("userName cannot be empty.");
+    if (!firstName) {
+      setFirstNameError("First name cannot be empty.");
       isValid = false;
     } else {
-      setUsernameError("");
+      setFirstNameError("");
+    }
+
+    if (!lastName) {
+      setLastNameError("Last name cannot be empty.");
+      isValid = false;
+    } else {
+      setLastNameError("");
     }
 
     if (!email) {
@@ -70,13 +79,14 @@ function SignupPage() {
     // Clear any existing error messages
     setEmailError("");
     setPasswordError("");
-    setUsernameError("");
+    setFirstNameError("");
+    setLastNameError("");
     setConfirmPasswordError("");
     setSignupError("");
     setIsSigningUp(true);
 
     try {
-      await Register(userName, email, password);
+      await Register(firstName, lastName, email, password);
       alert("Registration successful");
       navigate("/login");
     } catch (error) {
@@ -95,20 +105,35 @@ function SignupPage() {
         <div className="signup-glow bottom" aria-hidden="true"></div>
 
         <div className="signup-form">
-          <label htmlFor="userName" className={usernameError ? "labelError" : ""}>
-            Username
+          <label htmlFor="firstName" className={firstNameError ? "labelError" : ""}>
+            First name
           </label>
           <br />
           <input
             type="text"
-            name="userName"
-            placeholder="Enter a userName"
-            value={userName}
-            onChange={(e) => setUserName(e.target.value)}
-            className={usernameError ? "error" : "signup-username"}
+            name="firstName"
+            placeholder="Enter your first name"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+            className={firstNameError ? "error" : "signup-firstname"}
           />
           <br />
-          {usernameError && <div className="errorMessage">{usernameError}</div>}
+          {firstNameError && <div className="errorMessage">{firstNameError}</div>}
+
+          <label htmlFor="lastName" className={lastNameError ? "labelError" : ""}>
+            Last name
+          </label>
+          <br />
+          <input
+            type="text"
+            name="lastName"
+            placeholder="Enter your last name"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+            className={lastNameError ? "error" : "signup-lastname"}
+          />
+          <br />
+          {lastNameError && <div className="errorMessage">{lastNameError}</div>}
 
           <label htmlFor="email" className={emailError ? "labelError" : ""}>
             Email

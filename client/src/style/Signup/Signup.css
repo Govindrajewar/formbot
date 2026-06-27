@@ -98,7 +98,8 @@
   text-align: center;
 }
 
-.signup .signup-username,
+.signup .signup-firstname,
+.signup .signup-lastname,
 .signup .signup-password,
 .signup .signup-confirmpassword,
 .signup .signup-email {

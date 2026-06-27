@@ -7,11 +7,15 @@ import {
   LayoutDashboard,
   Settings as SettingsIcon,
   LogOut,
+  Sun,
+  Moon,
 } from "lucide-react";
 import Logo from "./Logo";
+import { useColorMode } from "../../context/ColorModeContext";
 
 function NavBar({ createFormBot, variant = "default", centerText }) {
   const navigate = useNavigate();
+  const { colorMode, toggleColorMode } = useColorMode();
   const isLoggedIn = Boolean(localStorage.getItem("formBotToken"));
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null);
@@ -60,6 +64,14 @@ function NavBar({ createFormBot, variant = "default", centerText }) {
       {centerText && <div className="navbar-center">{centerText}</div>}
 
       <div className="buttons">
+        <button
+          className="color-mode-toggle"
+          onClick={toggleColorMode}
+          aria-label="Toggle light/dark mode"
+          type="button"
+        >
+          {colorMode === "light" ? <Moon size={18} /> : <Sun size={18} />}
+        </button>
         {isLoggedIn ? (
           <div className="profile-menu" ref={menuRef}>
             <button
