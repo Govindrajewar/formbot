@@ -1,75 +1,101 @@
 # FormBot Client
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+The React frontend for [FormBot](../README.md) — a visual chatbot/form
+builder. Build a form from drag-and-drop blocks, save it to a folder, share
+its public link, and review responses, all from this app.
 
-## Local Setup
+Bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+## Features
+
+- **Landing page** (`/`) — marketing page with sign-up CTA
+- **Auth** (`/login`, `/signup`) — email/password, JWT stored in
+  `localStorage`; protected routes redirect to `/login` when logged out
+  ([src/components/ProtectedRoute.jsx](src/components/ProtectedRoute.jsx))
+- **Dashboard** (`/dashboard`) — folders and forms, create/rename/delete
+  folders, create/edit/delete forms, share a form, jump to its responses
+  ([src/pages/PostLogin.jsx](src/pages/PostLogin.jsx))
+- **Workspace** (`/workspace`) — the drag-and-drop builder: add content
+  bubbles (text, image, video, gif) and input blocks (text, number, email,
+  phone, date, rating, button), reorder them, preview, and save
+  ([src/components/Workspace/Flow.jsx](src/components/Workspace/Flow.jsx)).
+  In-progress edits autosave to `localStorage` so a refresh or accidental
+  tab close doesn't lose work
+  ([src/utils/workspaceDraft.js](src/utils/workspaceDraft.js))
+- **Public form view** (`/form/:formId`) and **preview** (`/preview`) —
+  the conversational, one-question-at-a-time runtime that respondents (no
+  account needed) and the form author (preview) both see
+  ([src/pages/Desktop.jsx](src/pages/Desktop.jsx))
+- **Responses** (`/responses/:formId`) — submitted answers for a form
+- **Settings** (`/settings`) — update profile
+- **Light/dark theme**, persisted to `localStorage`
+  ([src/context/ColorModeContext.jsx](src/context/ColorModeContext.jsx))
+- **Share menu** — copy-link and WhatsApp share for a form's public URL
+  ([src/components/Shared/ShareMenu.jsx](src/components/Shared/ShareMenu.jsx))
+
+## Tech stack
+
+React 18, React Router 6, Axios, Create React App (react-scripts 5), lucide-react icons.
+
+## Project structure
 
 ```
+client/
+├── public/                 Static assets, index.html, 404.html (GitHub Pages SPA fallback)
+└── src/
+    ├── api/                axiosInstance (auth header + 401 handling), User API calls
+    ├── components/         Reusable UI: HomePage sections, Workspace builder, ProtectedRoute, ShareMenu
+    ├── context/            ColorModeContext (light/dark theme)
+    ├── pages/              One component per route (HomePage, LoginPage, Workspace, Desktop, ...)
+    ├── style/              Per-page/component CSS
+    ├── utils/              workspaceDraft (autosave), jwt, validators, formatName
+    ├── deploymentLink.js   BACKEND_URL/FRONTEND_URL + buildAppUrl() helper
+    └── App.js              Route table
+```
+
+## Routes
+
+| Path | Page | Auth |
+|---|---|---|
+| `/` | Landing page | — |
+| `/login`, `/signup` | Auth | — |
+| `/dashboard` | Folders & forms list | ✓ |
+| `/workspace` | Form builder | ✓ |
+| `/settings` | Account settings | ✓ |
+| `/responses/:formId` | Responses for a form | ✓ |
+| `/form/:formId` | Public form-filling view | — |
+| `/preview`, `/desktop` | Builder's own preview | — |
+
+## Environment variables
+
+See [.env.example](.env.example). Both are read at build time (CRA inlines
+`REACT_APP_*` vars) and fall back to production defaults in
+[src/deploymentLink.js](src/deploymentLink.js) if unset:
+
+| Variable | Description |
+|---|---|
+| `REACT_APP_BACKEND_URL` | Base URL of the [server](../server) API |
+| `REACT_APP_FRONTEND_URL` | This app's own deployed URL |
+
+## Local setup
+
+```bash
 npm install
-cp .env.example .env.development.local   # set REACT_APP_BACKEND_URL etc.
+cp .env.example .env.development.local   # defaults point at localhost:4000
 npm start
 ```
 
-## Available Scripts
+Open [http://localhost:3000](http://localhost:3000). Requires the
+[server](../server) running locally too — see its README, or run both
+together with `npm run dev` from `server/`.
 
-In the project directory, you can run:
+## Available scripts
 
-### `npm start`
+- `npm start` — dev server with hot reload at `localhost:3000`
+- `npm run build` — production build to `build/`
+- `npm test` — CRA's interactive test runner
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
+## Deployment
 
 The app is deployed to **GitHub Pages** at:
 
@@ -90,9 +116,9 @@ In the GitHub repo settings: **Settings → Pages → Source → GitHub Actions*
 #### Routing on GitHub Pages
 
 React Router uses `BrowserRouter` with `basename={process.env.PUBLIC_URL}`, so
-clean URLs (e.g. `/login`, `/dashboard`) work as on Vercel. Since GitHub Pages
-serves static files only and has no server-side rewrite rules, direct loads
-and refreshes of deep links are handled via the
+clean URLs (e.g. `/login`, `/dashboard`) work the same as before. Since
+GitHub Pages serves static files only and has no server-side rewrite rules,
+direct loads and refreshes of deep links are handled via the
 [SPA-on-GitHub-Pages redirect trick](https://github.com/rafgraph/spa-github-pages):
 `public/404.html` redirects unmatched paths back to `index.html`, which
 restores the original URL via `history.replaceState` before React mounts.
@@ -107,7 +133,3 @@ falls back to the production defaults in `src/deploymentLink.js`.
 The backend's `CLIENT_URL` (CORS allowlist) must include
 `https://govindrajewar.github.io` for API requests from the deployed site to
 succeed.
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
