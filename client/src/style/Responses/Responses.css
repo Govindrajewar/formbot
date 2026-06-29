@@ -49,11 +49,50 @@
   color: var(--primary);
 }
 
+.responses-header-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
 .responses-title {
   font-size: 24px;
   font-weight: 700;
   color: var(--text);
-  margin: 0 0 24px;
+  margin: 0;
+}
+
+.responses-export-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.responses-export-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color var(--transition), color var(--transition);
+}
+
+.responses-export-btn:hover:not(:disabled) {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.responses-export-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .responses-status-message {
