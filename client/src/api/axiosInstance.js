@@ -17,8 +17,9 @@ axiosInstance.interceptors.response.use(
     if (error.response?.status === 401) {
       localStorage.removeItem("formBotToken");
       localStorage.removeItem("formBotCurrentUser");
-      if (window.location.pathname !== "/") {
-        window.location.href = "/";
+      const homePath = `${process.env.PUBLIC_URL}/`;
+      if (window.location.pathname !== homePath) {
+        window.location.href = homePath;
       }
     }
     return Promise.reject(error);

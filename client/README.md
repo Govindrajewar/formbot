@@ -1,6 +1,14 @@
-# Getting Started with Create React App
+# FormBot Client
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+## Local Setup
+
+```
+npm install
+cp .env.example .env.development.local   # set REACT_APP_BACKEND_URL etc.
+npm start
+```
 
 ## Available Scripts
 
@@ -63,7 +71,42 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/a
 
 ### Deployment
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+The app is deployed to **GitHub Pages** at:
+
+[https://govindrajewar.github.io/FormBot/](https://govindrajewar.github.io/FormBot/)
+
+Deployment is automated: every push to `main` that touches `client/**` triggers
+the [`.github/workflows/deploy.yml`](../.github/workflows/deploy.yml) workflow, which
+installs dependencies, runs `npm run build`, and publishes `client/build` to
+GitHub Pages via `actions/deploy-pages`. No manual deploy step is required.
+
+To trigger a deploy manually, run the workflow from the **Actions** tab
+("Deploy to GitHub Pages" → "Run workflow").
+
+#### One-time repository setup
+
+In the GitHub repo settings: **Settings → Pages → Source → GitHub Actions**.
+
+#### Routing on GitHub Pages
+
+React Router uses `BrowserRouter` with `basename={process.env.PUBLIC_URL}`, so
+clean URLs (e.g. `/login`, `/dashboard`) work as on Vercel. Since GitHub Pages
+serves static files only and has no server-side rewrite rules, direct loads
+and refreshes of deep links are handled via the
+[SPA-on-GitHub-Pages redirect trick](https://github.com/rafgraph/spa-github-pages):
+`public/404.html` redirects unmatched paths back to `index.html`, which
+restores the original URL via `history.replaceState` before React mounts.
+
+#### Build-time environment variables
+
+`REACT_APP_BACKEND_URL` and `REACT_APP_FRONTEND_URL` are inlined at build
+time. The workflow reads them from repository **Variables**
+(Settings → Secrets and variables → Actions → Variables); if unset, the app
+falls back to the production defaults in `src/deploymentLink.js`.
+
+The backend's `CLIENT_URL` (CORS allowlist) must include
+`https://govindrajewar.github.io` for API requests from the deployed site to
+succeed.
 
 ### `npm run build` fails to minify
 

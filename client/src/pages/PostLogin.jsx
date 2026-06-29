@@ -7,6 +7,7 @@ import NavBar from "../components/HomePage/NavBar";
 import Footer from "../components/HomePage/Footer";
 import ShareMenu from "../components/Shared/ShareMenu";
 import { getFirstName } from "../utils/formatName";
+import { buildAppUrl } from "../deploymentLink";
 
 function PostLogin() {
   const [userName] = useState(getFirstName(localStorage.getItem("formBotCurrentUser")));
@@ -292,7 +293,7 @@ function PostLogin() {
                     </button>
                     <ShareMenu
                       variant="icon"
-                      link={`${window.location.origin}/form/${formId}`}
+                      link={buildAppUrl(`/form/${formId}`)}
                     />
                     <button
                       className="form-icon-btn form-icon-btn-delete"
