@@ -4,7 +4,7 @@ FormBot is a visual chatbot/form builder. Drag and drop blocks to build
 conversational forms, organize them into folders, share a public link, and
 collect responses — all from a dashboard with light/dark themes.
 
-- **Live app:** https://govindrajewar.github.io/FormBot/
+- **Live app:** https://govindrajewar.github.io/formbot/
 - **API:** https://formbot-server-fxza.onrender.com
 
 ## Features

@@ -99,7 +99,7 @@ together with `npm run dev` from `server/`.
 
 The app is deployed to **GitHub Pages** at:
 
-[https://govindrajewar.github.io/FormBot/](https://govindrajewar.github.io/FormBot/)
+[https://govindrajewar.github.io/formbot/](https://govindrajewar.github.io/formbot/)
 
 Deployment is automated: every push to `main` that touches `client/**` triggers
 the [`.github/workflows/deploy.yml`](../.github/workflows/deploy.yml) workflow, which
