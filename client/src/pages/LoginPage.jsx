@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { Login } from "../api/User.js";
@@ -115,7 +115,7 @@ function LoginPage() {
             {isLoggingIn ? "Logging in..." : "Log in"}
           </div>
           <div className="login-text">
-            Don't have an account? <a href="/signup">Register now</a>
+            Don't have an account? <Link to="/signup">Register now</Link>
           </div>
         </div>
       </div>

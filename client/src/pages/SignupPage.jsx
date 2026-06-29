@@ -1,5 +1,5 @@
 import "../style/Signup/Signup.css";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Register } from "../api/User.js";
 import NavBar from "../components/HomePage/NavBar";
@@ -195,7 +195,7 @@ function SignupPage() {
           </div>
 
           <div className="signup-text">
-            Already have an account? <a href="/login">Login</a>
+            Already have an account? <Link to="/login">Login</Link>
           </div>
         </div>
       </div>
