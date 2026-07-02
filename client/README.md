@@ -41,7 +41,7 @@ React 18, React Router 6, Axios, Create React App (react-scripts 5), lucide-reac
 
 ```
 client/
-├── public/                 Static assets, index.html, 404.html (GitHub Pages SPA fallback)
+├── public/                 Static assets, index.html
 └── src/
     ├── api/                axiosInstance (auth header + 401 handling), User API calls
     ├── components/         Reusable UI: HomePage sections, Workspace builder, ProtectedRoute, ShareMenu
@@ -49,7 +49,6 @@ client/
     ├── pages/              One component per route (HomePage, LoginPage, Workspace, Desktop, ...)
     ├── style/              Per-page/component CSS
     ├── utils/              workspaceDraft (autosave), jwt, validators, formatName
-    ├── deploymentLink.js   BACKEND_URL/FRONTEND_URL + buildAppUrl() helper
     └── App.js              Route table
 ```
 
@@ -68,14 +67,18 @@ client/
 
 ## Environment variables
 
-See [.env.example](.env.example). Both are read at build time (CRA inlines
-`REACT_APP_*` vars) and fall back to production defaults in
-[src/deploymentLink.js](src/deploymentLink.js) if unset:
+See [.env.example](.env.example). Read at build time (CRA inlines
+`REACT_APP_*` vars into the bundle — these are not secret, just config).
+`.env*` files are gitignored, so nothing is committed:
 
 | Variable | Description |
 |---|---|
 | `REACT_APP_BACKEND_URL` | Base URL of the [server](../server) API |
-| `REACT_APP_FRONTEND_URL` | This app's own deployed URL |
+
+For local dev, copy `.env.example` to `.env.development.local`. For
+production, it must be set in the Vercel project's environment variables —
+there's no committed fallback, so the build will call an undefined URL if
+it's missing there.
 
 ## Local setup
 
@@ -97,39 +100,21 @@ together with `npm run dev` from `server/`.
 
 ## Deployment
 
-The app is deployed to **GitHub Pages** at:
+The app is deployed to **Vercel**, served from the domain root (no subpath).
+[vercel.json](vercel.json) adds a catch-all rewrite to `index.html` so client-side
+routes (e.g. `/login`, `/dashboard`, deep links, refreshes) resolve correctly,
+since Vercel serves static files only and has no built-in SPA fallback.
 
-[https://govindrajewar.github.io/formbot/](https://govindrajewar.github.io/formbot/)
-
-Deployment is automated: every push to `main` that touches `client/**` triggers
-the [`.github/workflows/deploy.yml`](../.github/workflows/deploy.yml) workflow, which
-installs dependencies, runs `npm run build`, and publishes `client/build` to
-GitHub Pages via `actions/deploy-pages`. No manual deploy step is required.
-
-To trigger a deploy manually, run the workflow from the **Actions** tab
-("Deploy to GitHub Pages" → "Run workflow").
-
-#### One-time repository setup
-
-In the GitHub repo settings: **Settings → Pages → Source → GitHub Actions**.
-
-#### Routing on GitHub Pages
-
-React Router uses `BrowserRouter` with `basename={process.env.PUBLIC_URL}`, so
-clean URLs (e.g. `/login`, `/dashboard`) work the same as before. Since
-GitHub Pages serves static files only and has no server-side rewrite rules,
-direct loads and refreshes of deep links are handled via the
-[SPA-on-GitHub-Pages redirect trick](https://github.com/rafgraph/spa-github-pages):
-`public/404.html` redirects unmatched paths back to `index.html`, which
-restores the original URL via `history.replaceState` before React mounts.
+Connect the repo in the Vercel dashboard with **Root Directory** set to
+`client`, framework preset **Create React App**. Every push to `main` (or a
+PR) triggers a deploy automatically.
 
 #### Build-time environment variables
 
-`REACT_APP_BACKEND_URL` and `REACT_APP_FRONTEND_URL` are inlined at build
-time. The workflow reads them from repository **Variables**
-(Settings → Secrets and variables → Actions → Variables); if unset, the app
-falls back to the production defaults in `src/deploymentLink.js`.
+`REACT_APP_BACKEND_URL` is inlined at build time and must be set in the
+Vercel project's **Settings → Environment Variables** (no committed
+`.env.production` — see [Environment variables](#environment-variables)).
 
-The backend's `CLIENT_URL` (CORS allowlist) must include
-`https://govindrajewar.github.io` for API requests from the deployed site to
-succeed.
+The backend's `CLIENT_URL` (CORS allowlist) must include this app's Vercel
+origin (e.g. `https://your-app.vercel.app`) for API requests from the
+deployed site to succeed.

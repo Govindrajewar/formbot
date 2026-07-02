@@ -73,7 +73,7 @@ See [.env.example](.env.example):
 | `PORT` | Port to listen on (default `4000`) |
 | `MONGODB_URL` | MongoDB connection string |
 | `jwtPrivateKey` | Secret used to sign/verify JWTs |
-| `CLIENT_URL` | Comma-separated list of allowed CORS origins (must include the deployed client's origin, e.g. `https://govindrajewar.github.io`) |
+| `CLIENT_URL` | Comma-separated list of allowed CORS origins (must include the deployed client's origin, e.g. `https://your-app.vercel.app`) |
 
 ## Local setup
 

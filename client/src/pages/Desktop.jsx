@@ -4,9 +4,10 @@ import axios from "axios";
 import icon from "../../src/assets/Workspace/Theme/icon.png";
 import send from "../assets/Desktop/send.png";
 import { useLocation, useNavigate } from "react-router-dom";
-import { BACKEND_URL } from "../deploymentLink";
 import NavBar from "../components/HomePage/NavBar";
 import Footer from "../components/HomePage/Footer";
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const INPUT_TYPES = [
   "textInput",

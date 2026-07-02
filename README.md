@@ -4,7 +4,7 @@ FormBot is a visual chatbot/form builder. Drag and drop blocks to build
 conversational forms, organize them into folders, share a public link, and
 collect responses — all from a dashboard with light/dark themes.
 
-- **Live app:** https://govindrajewar.github.io/formbot/
+- **Live app:** deployed on Vercel (see [client README](client/README.md#deployment))
 - **API:** https://formbot-server-fxza.onrender.com
 
 ## Features
@@ -28,7 +28,7 @@ collect responses — all from a dashboard with light/dark themes.
 
 ```
 FormBot/
-├── client/   React frontend (deployed to GitHub Pages)
+├── client/   React frontend (deployed to Vercel)
 └── server/   Express API (deployed to Render)
 ```
 
@@ -64,5 +64,5 @@ Or run them separately: `npm run server` / `npm run client` from `server/`, or `
 
 ## Deployment
 
-- **Client** → GitHub Pages, auto-deployed by [.github/workflows/deploy.yml](.github/workflows/deploy.yml) on every push to `main` that touches `client/**`. See [client/README.md](client/README.md#deployment) for routing/config details.
-- **Server** → Render (or any Node host). Set `MONGODB_URL`, `jwtPrivateKey`, and `CLIENT_URL` (must include the GitHub Pages origin for CORS) in the host's environment.
+- **Client** → Vercel, auto-deployed on every push to `main` (Root Directory `client`). See [client/README.md](client/README.md#deployment) for routing/config details.
+- **Server** → Render (or any Node host). Set `MONGODB_URL`, `jwtPrivateKey`, and `CLIENT_URL` (must include the Vercel origin for CORS) in the host's environment.

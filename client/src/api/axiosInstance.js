@@ -1,7 +1,6 @@
 import axios from "axios";
-import { BACKEND_URL } from "../deploymentLink";
 
-const axiosInstance = axios.create({ baseURL: BACKEND_URL });
+const axiosInstance = axios.create({ baseURL: process.env.REACT_APP_BACKEND_URL });
 
 axiosInstance.interceptors.request.use((config) => {
   const token = localStorage.getItem("formBotToken");
@@ -17,9 +16,8 @@ axiosInstance.interceptors.response.use(
     if (error.response?.status === 401) {
       localStorage.removeItem("formBotToken");
       localStorage.removeItem("formBotCurrentUser");
-      const homePath = `${process.env.PUBLIC_URL}/`;
-      if (window.location.pathname !== homePath) {
-        window.location.href = homePath;
+      if (window.location.pathname !== "/") {
+        window.location.href = "/";
       }
     }
     return Promise.reject(error);

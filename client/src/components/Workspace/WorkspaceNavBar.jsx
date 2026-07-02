@@ -6,7 +6,6 @@ import { useColorMode } from "../../context/ColorModeContext";
 import ShareMenu from "../Shared/ShareMenu";
 import { clearWorkspaceDraft } from "../../utils/workspaceDraft";
 import { getFirstName } from "../../utils/formatName";
-import { buildAppUrl } from "../../deploymentLink";
 
 function WorkspaceNavBar({
   formName,
@@ -92,7 +91,7 @@ function WorkspaceNavBar({
           Preview
         </button>
         {currentFormId ? (
-          <ShareMenu link={buildAppUrl(`/form/${currentFormId}`)} />
+          <ShareMenu link={`${window.location.origin}/form/${currentFormId}`} />
         ) : (
           <button
             className="share-btn"
